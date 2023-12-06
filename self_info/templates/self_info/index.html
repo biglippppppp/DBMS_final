@@ -25,12 +25,12 @@
 <body>
     <div id="title">
         <!-- 像這樣可以顯示輸入的user的資訊 -->
-        <h1>NTUSHB - 您好！{{user.user_name}}</h1> 
+        <h1>NTUSHB - 個人資訊頁：{{user.user_name}}</h1> 
     </div>
     <div id="login-form">
         <form method="post">
             {% csrf_token %}
-            <button type="submit" name="button" value="self_info">個人資訊頁</button>
+            <button type="submit" name="button" value="personal_order">瀏覽訂單紀錄</button>
         </form>
     </div>
 </body>

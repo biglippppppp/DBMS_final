@@ -6,8 +6,13 @@ def index(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         role = request.POST.get('role')
+
+        fake_user_id = 1
         # task1: 檢查 username 和 password 是否正確
-        return redirect('/main_p/')
+        if role == 'user':
+            return redirect('main_p:index', user_id=fake_user_id)
+        elif role == 'admin':
+            return redirect('/admin/')
 
     return render(request, 'login/index.html')
 
