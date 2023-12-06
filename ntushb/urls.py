@@ -24,4 +24,5 @@ urlpatterns = [
     path('main_p/', include('main_p.urls')),
     path('order/', include('order.urls')),
     path('self_info/', include('self_info.urls')),
+    path('evaluate/', include('evaluate.urls')),
 ]

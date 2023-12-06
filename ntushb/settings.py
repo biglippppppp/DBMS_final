@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'main_p',
     'order',
     'self_info',
-    
+    'evaluate',
 ]
 
 MIDDLEWARE = [

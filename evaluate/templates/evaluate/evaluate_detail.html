@@ -25,12 +25,6 @@
 <body>
     <div id="title">
         <!-- 像這樣可以顯示輸入的user的資訊 -->
-        <h1>NTUSHB - 個人資訊頁，id：{{user_id}}</h1> 
-    </div>
-    <div id="login-form">
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" name="button" value="personal_order">瀏覽訂單紀錄</button>
-        </form>
+        <h1>NTUSHB - id：{{user_id}}的評價</h1> 
     </div>
 </body>
