@@ -22,6 +22,6 @@ def register(request):
         password = request.POST.get('password')
         email = request.POST.get('email')
         # task2: 在資料庫中新增一筆使用者資料
-        return redirect('index')  
+        return redirect('/')  
 
     return render(request, 'login/register.html')

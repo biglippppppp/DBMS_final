@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NTUSHB</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        #login-form {
+            margin: 50px auto;
+            width: 30%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 10px #ccc;
+        }
+        #title {
+            background-color: #f8f8f8;
+            color: #333;
+            padding: 10px 20px;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="title">
+        <!-- 像這樣可以顯示輸入的user的資訊 -->
+        <h1>NTUSHB - 徵求訂單細節</h1> 
+    </div>
+    <form method="post">
+        {% csrf_token %}
+    <ul>
+        {% for book in books %}
+            <li>
+                書籍資訊：<br>
+                <span style="color: blue;">ISBN:</span> {{ book.isbn }}, 
+                <span style="color: blue;">書名:</span> {{ book.title }},
+                <span style="color: blue;">作者:</span> {{ book.author }},
+                <span style="color: blue;">訂單描述:</span> {{ book.description }},
+                <span style="color: blue;">類別:</span> {{ book.category }},<br>
+                <span style="color: blue;">所屬課程:</span> {{ book.courseName }},
+                <span style="color: blue;">課程編號:</span> {{ book.courseID }},
+                <span style="color: blue;">學年度:</span>{{ book.academic_year }},
+                <span style="color: blue;">授課教師:</span>{{ book.teacherName }},
+                <button type="submit"  name="button_{{ book.poster.user_id}}" value="receive">接受訂單</button><br>
+            </li>
+            <li>
+                ---------------------------------------------------------------------------------------
+            </li>
+        {% endfor %}
+    </ul>
+    </form>
+</body>

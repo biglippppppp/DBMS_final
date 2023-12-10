@@ -8,4 +8,8 @@ def index(request, user_id):
         #改變html中按鈕的value可以達到按下不同按鈕後，跳轉到不同的頁面
         if request.POST.get('button') == 'self_info':
             return redirect('self_info:index', user_id=fake_user['user_id'])
+        elif request.POST.get('button') == 'sale_order':
+            return redirect('order:sale_order', user_id=fake_user['user_id'])
+        elif request.POST.get('button') == 'want_order':
+            return redirect('order:want_order', user_id=fake_user['user_id'])
     return render(request, 'main_p/index.html', {'user_id': user_id})

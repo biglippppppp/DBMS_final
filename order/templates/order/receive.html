@@ -25,14 +25,18 @@
 <body>
     <div id="title">
         <!-- 像這樣可以顯示輸入的user的資訊 -->
-        <h1>NTUSHB - 您好！{{user.user_name}}</h1> 
+        <h1>NTUSHB 聯絡po文者</h1> 
     </div>
-    <div id="login-form">
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" name="button" value="self_info">個人資訊頁</button>
-            <button type="submit" name="button" value="sale_order">查看所有販賣訂單</button>
-            <button type="submit" name="button" value="want_order">查看所有徵求訂單</button>
-        </form>
-    </div>
+    
+    <ul>
+            <li>
+                po文者資訊：
+            </li>
+            <li>
+                使用者名稱: {{ poster.user_name }}
+            </li>
+            <li>
+                使用者信箱: {{ poster.email }}
+            </li>
+    </ul>
 </body>

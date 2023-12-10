@@ -32,6 +32,7 @@ class FakeBook_detail:
             self.academic_year = '112-1'
             self.courseName = '資料庫'
             self.teacherName = '孔子'
+            
 app_name = 'self_info'
 def index(request, user_id):
     if request.method == 'POST':
@@ -120,7 +121,7 @@ def finish_sell_detail(request, order_id, user_id):
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/finish_sell_detail.html', {'books': books1,'user_id': user_id})
+    return render(request, 'self_info/detail/finish_sell_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
 
 def posting_sell_detail(request, order_id, user_id):
     user1 = FakeUser(3, 'Jerry3')
@@ -150,7 +151,7 @@ def received_sell_detail(request, order_id, user_id):
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/received_sell_detail.html', {'books': books1,'user_id': user_id})
+    return render(request, 'self_info/detail/received_sell_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
 
 def finish_want_detail(request, order_id, user_id):
     user1 = FakeUser(3, 'Jerry3')
@@ -161,7 +162,7 @@ def finish_want_detail(request, order_id, user_id):
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/finish_want_detail.html', {'books': books1,'user_id': user_id})
+    return render(request, 'self_info/detail/finish_want_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
 
 def posting_want_detail(request, order_id, user_id):
     user1 = FakeUser(3, 'Jerry3')
@@ -188,6 +189,7 @@ def received_want_detail(request, order_id, user_id):
     if request.method == 'POST':
         for key, value in request.POST.items():
                 if value == 'evaluate':
+                    print(key)
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/received_want_detail.html', {'books': books1,'user_id': user_id})
+    return render(request, 'self_info/detail/received_want_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
