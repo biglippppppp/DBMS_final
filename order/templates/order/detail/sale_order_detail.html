@@ -43,7 +43,15 @@
                 <span style="color: blue;">課程編號:</span> {{ book.courseID }},
                 <span style="color: blue;">學年度:</span>{{ book.academic_year }},
                 <span style="color: blue;">授課教師:</span>{{ book.teacherName }},
+                {% if book.status == 'posting' %}
                 <button type="submit"  name="button" value="receive">接受訂單</button><br>
+                {% endif %}
+                {% if book.status == 'finished' %}
+                <span style="color: red;">這本書已經被別人買走了！</span>
+                {% endif %}
+                {% if book.status == 'canceled' %}
+                <span style="color: red;">這本書已經被po文者取消販賣了！</span>
+                {% endif %}
             </li>
             <li>
                 ---------------------------------------------------------------------------------------

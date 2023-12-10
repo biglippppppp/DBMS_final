@@ -144,7 +144,7 @@ def posting_sell_detail(request, order_id, user_id):
 
 def received_sell_detail(request, order_id, user_id):
     user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook_detail("ISBN1", "100", "Description 1",user1,'finished'), FakeBook_detail("ISBN2", "150", "Description 2",user1,'received')]
+    books1 = [FakeBook_detail("ISBN1", "100", "Description 1",user1,'finished'), FakeBook_detail("ISBN2", "150", "Description 2",user1,'finished')]
     
     if request.method == 'POST':
         for key, value in request.POST.items():
@@ -185,7 +185,7 @@ def posting_want_detail(request, order_id, user_id):
 
 def received_want_detail(request, order_id, user_id):
     user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook_detail("ISBN1", None, "Description 1",user1,'finished'), FakeBook_detail("ISBN2", None, "Description 2",user1,'received')]
+    books1 = [FakeBook_detail("ISBN1", None, "Description 1",user1,'finished'), FakeBook_detail("ISBN2", None, "Description 2",user1,'finished')]
     if request.method == 'POST':
         for key, value in request.POST.items():
                 if value == 'evaluate':

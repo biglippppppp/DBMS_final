@@ -75,7 +75,7 @@ def sale_order(request, user_id):
 
 def want_order_detail(request, user_id, order_id):
     user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook_detail("ISBN1", "100", "Description 1",poster=user1,status='posting'), FakeBook_detail("ISBN2", "150", "Description 2",poster=user1,status='posting')]
+    books1 = [FakeBook_detail("ISBN1", "100", "Description 1",poster=user1,status='finished'), FakeBook_detail("ISBN2", "150", "Description 2",poster=user1,status='posting')]
     poster_id = books1[0].poster.user_id
     if request.method == 'POST':
         for key, value in request.POST.items():
@@ -85,7 +85,7 @@ def want_order_detail(request, user_id, order_id):
 
 def sale_order_detail(request, user_id, order_id):
     user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook_detail("ISBN1", "100", "Description 1",poster=user1,status='posting'), FakeBook_detail("ISBN2", "150", "Description 2",poster=user1,status='posting')]
+    books1 = [FakeBook_detail("ISBN1", "100", "Description 1",poster=user1,status='finished'), FakeBook_detail("ISBN2", "150", "Description 2",poster=user1,status='posting')]
     poster_id = books1[0].poster.user_id
     if request.method == 'POST':
         for key, value in request.POST.items():

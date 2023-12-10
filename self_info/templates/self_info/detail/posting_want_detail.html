@@ -47,7 +47,7 @@
                 <select name="status_{{ book.isbn }}">
                     <option value="finished" {% if book.status == 'finished' %}selected{% endif %}>已完成</option>
                     <option value="posting" {% if book.status == 'posting' %}selected{% endif %}>張貼中</option>
-                    <option value="cancelled" {% if book.status == 'cancelled' %}selected{% endif %}>已取消</option>
+                    <option value="canceled" {% if book.status == 'canceled' %}selected{% endif %}>已取消</option>
                 </select><br>
                 <button type="submit" name="button_{{book.isbn}}_{{order_id}}" value="renew">更新狀態</button>
                 {% endif %}
