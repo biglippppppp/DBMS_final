@@ -25,3 +25,4 @@ def register(request):
         return redirect('/')  
 
     return render(request, 'login/register.html')
+

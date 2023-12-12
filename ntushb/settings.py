@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'rest_framework',
     'login',
     'main_p',
     'order',
@@ -83,7 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'final_project',  # 你的數據庫名稱
         'USER': 'postgres',  # 你的數據庫用戶名
-        'PASSWORD': 'pojerry123',  # 你的數據庫密碼
+        'PASSWORD': '20030629',  # 你的數據庫密碼
         'HOST': 'localhost',  # 你的數據庫主機
         'PORT': '5432',  # 你的數據庫端口
     }
