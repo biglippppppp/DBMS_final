@@ -1,0 +1,28 @@
+<!-- write_review.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>填寫評論</title>
+</head>
+<body>
+    <h1>填寫{{ target_user }}的評論 </h1>
+	<form action="{% url 'submit_review' target_user %}" method="post">
+        {% csrf_token %}<!--Django 的模板標籤-->
+        <label for="score">評分：</label>
+        <select name="score" id="score">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+
+        <label for="comment">評論：</label>
+        <textarea name="comment" id="comment" rows="4"></textarea>
+
+        <button type="submit">提交</button>
+    </form>
+</body>
+</html>

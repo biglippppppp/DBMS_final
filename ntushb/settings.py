@@ -81,11 +81,11 @@ WSGI_APPLICATION = "ntushb.wsgi.application"
 DATABASES = {
     "default": {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'final_project',  # 你的數據庫名稱
+        'NAME': 'NTUSHB',  # 你的數據庫名稱
         'USER': 'postgres',  # 你的數據庫用戶名
-        'PASSWORD': 'pojerry123',  # 你的數據庫密碼
+        'PASSWORD': '910125',  # 你的數據庫密碼
         'HOST': 'localhost',  # 你的數據庫主機
-        'PORT': '5432',  # 你的數據庫端口
+        'PORT': '5433',  # 你的數據庫端口
     }
 }
 
