@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NTUSHB</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        #title {
+            background-color: #f8f8f8;
+            color: #333;
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+		table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+		
+    </style>
+</head>
+<body>
+    <div id="title">
+        <!-- 像這樣可以顯示輸入的user的資訊 -->
+        <h1>NTUSHB 評價使用者</h1> 
+    </div>
+	<h3>評價買家</h3>
+	<ul>
+        {% for buyer in received_buyers %}
+            <li>
+                {{ buyer.buyer }}
+                <button onclick="location.href='{% url 'write_review' buyer.buyer %}'">我要評論</button>
+            </li>
+        {% endfor %}
+    </ul>
+	<h3>評價賣家</h3>
+	<ul>
+        {% for seller in given_sellers %}
+            <li>
+                {{ seller.seller }}
+                <button onclick="location.href='{% url 'write_review' seller.seller %}'">我要評論</button>
+            </li>
+        {% endfor %}
+    </ul>
+	
+</body>
+</html>
