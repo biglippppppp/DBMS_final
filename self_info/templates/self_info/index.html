@@ -17,7 +17,7 @@
             background-color: #f8f8f8;
             color: #333;
             padding: 10px 20px;
-            text-align: left;
+            text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
     </style>
@@ -28,9 +28,14 @@
         <h1>NTUSHB - 個人資訊頁，id：{{user_id}}</h1> 
     </div>
     <div id="login-form">
+		<p>姓名：{{user_name}}</p>
+		<p>信箱：{{user_email}}</p>
+		
+		<button onclick="location.href='{% url 'evaluate:evaluate_detail' user_id=3 %}'">瀏覽所有評價</button>
         <form method="post">
             {% csrf_token %}
             <button type="submit" name="button" value="personal_order">瀏覽訂單紀錄</button>
         </form>
+		
     </div>
 </body>

@@ -193,3 +193,11 @@ def received_want_detail(request, order_id, user_id):
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
     return render(request, 'self_info/detail/received_want_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
+    
+def evaluate_detail(request, user_id):
+    # Your view logic here
+    if request.method == 'POST':
+        # Process form data and save to the database
+        return render(request, 'evaluate/evaluate_detail.html', {'user_id': user_id})
+    else:
+        return render(request, 'evaluate/evaluate_detail.html', {'user_id': user_id})

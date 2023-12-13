@@ -1,0 +1,140 @@
+<!-- create_order.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Order</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>新增訂單</h1>
+
+    <form method="post" action="{% url 'main_p:create_order' %}" id="orderForm">
+        {% csrf_token %}
+
+        <label for="order_type">Order Type:</label>
+        <select id="order_type" name="order_type" onchange="toggleFields()">
+            <option value="sell">販賣訂單</option>
+            <option value="buy">徵求訂單</option>
+        </select>
+
+        <div id="isbnField">
+            <label for="isbn">ISBN:</label>
+            <input type="text" class="book-isbn" name="isbn_1" required>
+        </div>
+
+        <div id="priceField">
+            <label for="price">Price:</label>
+            <input type="number" class="book-price" name="price_1" required>
+        </div>
+
+        <div id="descriptionField">
+            <label for="description">Description:</label>
+            <textarea class="book-description" name="description_1"></textarea>
+        </div>
+
+        <!-- Dynamic Books will be added here -->
+
+        <!-- Buttons -->
+        <div>
+            <button type="button" onclick="addBook()">Add Book</button>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+
+    <script>
+        var bookCounter = 1; // Initialize a counter for the books
+
+        function toggleFields() {
+            var orderType = document.getElementById("order_type").value;
+            var isbnField = document.getElementById("isbnField");
+            var priceField = document.getElementById("priceField");
+            var descriptionField = document.getElementById("descriptionField");
+
+            if (orderType === "buy") {
+                isbnField.style.display = "block";
+                priceField.style.display = "none";
+                descriptionField.style.display = "block";
+            } else {
+                isbnField.style.display = "block";
+                priceField.style.display = "block";
+                descriptionField.style.display = "block";
+            }
+        }
+
+        function addBook() {
+            var bookContainer = document.getElementById("orderForm");
+
+            var newBookDiv = document.createElement("div");
+            newBookDiv.innerHTML = `
+                <hr>
+                <div>
+                    <label for="isbn">Book ${bookCounter + 1} ISBN:</label>
+                    <input type="text" class="book-isbn" name="isbn_${bookCounter + 1}" required>
+                </div>
+                <div id="priceField">
+                    <label for="price">Book ${bookCounter + 1} Price:</label>
+                    <input type="number" class="book-price" name="price_${bookCounter + 1}" required>
+                </div>
+                <div id="descriptionField">
+                    <label for="description">Book ${bookCounter + 1} Description:</label>
+                    <textarea class="book-description" name="description_${bookCounter + 1}"></textarea>
+                </div>
+            `;
+
+            // Append the new book div at the end of the form
+            bookContainer.appendChild(newBookDiv);
+
+            // Increment the book counter for the next book
+            bookCounter++;
+        }
+
+        // Initial setup
+        toggleFields();
+    </script>
+</body>
+</html>

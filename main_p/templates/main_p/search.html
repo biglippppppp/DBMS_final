@@ -1,0 +1,113 @@
+<!-- search_orders.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Orders</title>
+	<style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h1>查詢訂單</h1>
+
+<form method="post" action="{% url 'main_p:search' %}">
+    {% csrf_token %}
+
+    <label for="order_type">訂單種類</label>
+    <select id="order_type" name="order_type">
+        <option value="sell">販賣</option>
+        <option value="buy">徵求</option>
+    </select>
+
+    <label for="category">類別</label>
+    <select id="category" name="category">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+    </select>
+
+    <label for="keyword">關鍵字(非必填項目)</label>
+    <input type="text" id="keyword" name="keyword">
+
+    <form method="post" action="{% url 'main_p:search_result' %}">
+    {% csrf_token %}
+    <!-- Form fields -->
+    <button type="submit" value="submit" onclick="location.href='{% url 'main_p:search_result'%}'">Submit</button>
+	</form>
+	
+
+</form>
+<P>類別說明：<P>
+	<li>
+	1：理、工、電資學院
+	</li>
+	<li>
+	2：文、法、社科學院
+	</li>
+	<li>
+	3：生科、生農學院
+	</li>
+	<li>
+	4：醫、工衛學院
+	</li>
+	<li>
+	5：管理、創新設計學院
+	</li>
+	<li>
+	6：國際學院、重點科技研究學院、共同教育中心、進修
+	推廣學院
+	</li>
+	<li>
+	7：通識、共同必修、非課程用書
+	</li>
+
+
+
+</body>
+</html>

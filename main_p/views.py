@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.http import HttpResponse
 
 app_name = 'main_p'
 def index(request, user_id):
@@ -13,3 +14,39 @@ def index(request, user_id):
         elif request.POST.get('button') == 'want_order':
             return redirect('order:want_order', user_id=fake_user['user_id'])
     return render(request, 'main_p/index.html', {'user_id': user_id})
+    
+def create_order(request):
+    if request.method == 'POST':
+        # Process form data and save to the database
+        return render(request, 'main_p/create_order.html')
+    else:
+        return render(request, 'main_p/create_order.html')
+
+def search(request):
+    if request.method == 'POST':
+        # Process form data and save to the database
+        return render(request, 'main_p/search.html')
+    else:
+        return render(request, 'main_p/search.html')
+        
+def search_result(request):
+    if request.method == 'POST':
+        # Process form data and save to the database
+        return render(request, 'search_result.html')
+    else:
+        return render(request, 'search_result.html')
+    
+def evaluate_user(request, user_id):
+    if request.method == 'POST':
+        # Process form data and save to the database
+        return render(request, 'evaluate/evaluate_user.html', {'user_id': user_id})
+    else:
+        return render(request, 'evaluate/evaluate_user.html', {'user_id': user_id})
+        
+def self_info(request, user_id):
+    if request.method == 'POST':
+        # Process form data and save to the database
+        return render(request, 'self_info/index.html', {'user_id': user_id})
+    else:
+        return render(request, 'self_info/index.html', {'user_id': user_id})
+        
