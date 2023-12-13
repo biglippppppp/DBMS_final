@@ -52,9 +52,9 @@ $ pip install psycopg2
 ```
 ### 更新 Django 設定
 
-安裝完 `psycopg2` 後，您需要更新 Django 專案的 `settings.py` 檔案，以使用 PostgreSQL 資料庫。
+安裝完 `psycopg2` 後，您需要更新 Django 專案的 `ntushb/settings.py` 檔案，以使用 PostgreSQL 資料庫。
 
-打開 `settings.py`，並將 `DATABASES` 設定更改為以下內容：
+打開 `ntushb/settings.py`，並將 `DATABASES` 設定更改為以下內容：
 ```
 DATABASES = {
     'default': {
