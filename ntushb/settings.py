@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'order',
     'self_info',
     'evaluate',
+    'posting',
 ]
 
 MIDDLEWARE = [

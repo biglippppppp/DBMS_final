@@ -166,6 +166,9 @@ class Evaluate(models.Model):
         db_table = 'evaluate'
         unique_together = (('evaluatoruserid', 'evaluateduserid', 'rankdate'),)
 
+    @classmethod
+    def avg_score(cls, user_id):
+        return cls.objects.filter(evaluateduserid=user_id).aggregate(models.Avg('ranking'))['ranking__avg'] or 0
 
 class LookFor(models.Model):
     orderid = models.OneToOneField('WantOrder', models.DO_NOTHING, db_column='orderid', primary_key=True)  # The composite primary key (orderid, isbn) found, that is not supported. The first column is selected.

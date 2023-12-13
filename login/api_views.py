@@ -1,10 +1,9 @@
-from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from main_p.models import Users
 from main_p.models import UserRole
+
 
 class LoginAPIView(APIView):
 
@@ -34,5 +33,16 @@ class RegisterAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
 
-        email = request.data.get('eamil')
-        username =
+        email = request.data.get('email')
+        username = request.data.get('username')
+        password = request.data.get('password')
+        confirm_password = request.data.get('confirm_password')
+
+        if password != confirm_password:
+            return Response({'error': 'password inconsistency'})
+
+        user = Users.objects.create(username=username, password=password, email=email,
+                                    userid=Users.objects.count() + 1)
+        UserRole.objects.create(userid=user, role='User')
+
+        return Response({'message': 'Register successfully!'})
