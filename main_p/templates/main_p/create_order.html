@@ -46,6 +46,19 @@
         button:hover {
             background-color: #45a049;
         }
+		
+		.custom-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+		width: 70px;
+		}
+
+		.custom-button:hover {
+			background-color: #45a049;
 
     </style>
 </head>
@@ -53,7 +66,7 @@
 <body>
     <h1>新增訂單</h1>
 
-    <form method="post" action="{% url 'main_p:create_order' %}" id="orderForm">
+    <form method="post" action="{% url 'main_p:create_order' user_id=1 %}" id="orderForm">
         {% csrf_token %}
 
         <label for="order_type">Order Type:</label>
@@ -82,7 +95,9 @@
         <!-- Buttons -->
         <div>
             <button type="button" onclick="addBook()">Add Book</button>
-            <button type="submit">Submit</button>
+            <!--<button type="submit">Submit</button>-->
+			
+			<input type="button" value="Submit" class="custom-button" onclick="location.href='{% url 'self_info:posting' user_id=1%}'">
         </div>
     </form>
 
