@@ -33,26 +33,26 @@
             margin-bottom: 15px;
             box-sizing: border-box;
         }
+		.custom-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+		width: 70px;
+		}
 
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
+		.custom-button:hover {
+			background-color: #45a049;
+	}
     </style>
 </head>
 <body>
 
 <h1>查詢訂單</h1>
 
-<form method="post" action="{% url 'main_p:search' %}">
+<form method="post" action="{% url 'main_p:search' user_id=1 %}">
     {% csrf_token %}
 
     <label for="order_type">訂單種類</label>
@@ -75,11 +75,11 @@
     <label for="keyword">關鍵字(非必填項目)</label>
     <input type="text" id="keyword" name="keyword">
 
-    <form method="post" action="{% url 'main_p:search_result' %}">
+    <form method="post" action="{% url 'main_p:search_result' user_id=1%}">
     {% csrf_token %}
     <!-- Form fields -->
-    <button type="submit" value="submit" onclick="location.href='{% url 'main_p:search_result'%}'">Submit</button>
-	</form>
+
+	<input type="button" value="submit" class="custom-button" onclick="location.href='{% url 'main_p:search_result' user_id=1%}'">
 	
 
 </form>

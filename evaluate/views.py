@@ -25,11 +25,11 @@ def evaluate_detail(request, user_id):
     
 def evaluate_buyers(request):
     received_buyers = Order.objects.filter(seller=request.user).values('buyer').distinct()
-    return render(request, 'evaluate/evaluate_detail.html', {'received_buyers': received_buyers})
+    return render(request, 'evaluate/evaluate_user.html', {'received_buyers': received_buyers})
 
 def evaluate_sellers(request):
     given_sellers = Order.objects.filter(buyer=request.user).values('seller').distinct()
-    return render(request, 'evaluate/evaluate_detail.html', {'given_sellers': given_sellers})
+    return render(request, 'evaluate/evaluate_user.html', {'given_sellers': given_sellers})
 """  
 def evaluate_user(request):
     return render(request, 'evaluate/evaluate_user.html')

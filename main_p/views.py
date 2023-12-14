@@ -15,26 +15,26 @@ def index(request, user_id):
             return redirect('order:want_order', user_id=fake_user['user_id'])
     return render(request, 'main_p/index.html', {'user_id': user_id})
     
-def create_order(request):
+def create_order(request, user_id):
     if request.method == 'POST':
         # Process form data and save to the database
-        return render(request, 'main_p/create_order.html')
+        return render(request, 'main_p/create_order.html', {'user_id': user_id})
     else:
-        return render(request, 'main_p/create_order.html')
+        return render(request, 'main_p/create_order.html', {'user_id': user_id})
 
-def search(request):
+def search(request, user_id):
     if request.method == 'POST':
         # Process form data and save to the database
-        return render(request, 'main_p/search.html')
+        return render(request, 'main_p/search.html', {'user_id': user_id})
     else:
-        return render(request, 'main_p/search.html')
+        return render(request, 'main_p/search.html', {'user_id': user_id})
         
-def search_result(request):
+def search_result(request, user_id):
     if request.method == 'POST':
         # Process form data and save to the database
-        return render(request, 'search_result.html')
+        return render(request, 'main_p/search_result.html', {'user_id': user_id})
     else:
-        return render(request, 'search_result.html')
+        return render(request, 'main_p/search_result.html', {'user_id': user_id})
     
 def evaluate_user(request, user_id):
     if request.method == 'POST':
