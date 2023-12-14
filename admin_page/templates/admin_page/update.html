@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NTUSHB</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        #login-form {
+            margin: 50px auto;
+            width: 30%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 10px #ccc;
+        }
+        #title {
+            background-color: #f8f8f8;
+            color: #333;
+            padding: 10px 20px;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="title">
+        <h1>NTUSHB admin page</h1>
+    </div>
+    <div id="login-form">
+        <h2>update功能</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="update">update</label>
+            <select id="table" name="table">
+                <option value="USER">USER</option>
+                <option value="USER_ROLE">USER_ROLE</option>
+                <option value="WANT_ORDER">WANT_ORDER</option>
+                <option value="SALE_ORDER">SALE_ORDER</option>
+                <option value="LOOK_FOR">LOOK_FOR</option>
+                <option value="SELL">SELL</option>
+                <option value="BOOK">BOOK</option>
+                <option value="COURSE">COURSE</option>
+                <option value="REQUIRE">REQUIRE</option>
+                <option value="EVALUATE">EVALUATE</option>
+                <option value="RECEIVE_WANT">RECEIVE_WANT</option>
+                <option value="RECEIVE_SALE">RECEIVE_SALE</option>
+                <option value="BOOK_CATEGORY">BOOK_CATEGORY</option>
+            </select><br><br>
+            <label for="last">set</label>
+            <textarea type="text" id="set" name="set"></textarea><br>
+            <label for="last">where</label>
+            <textarea type="text" id="sql" name="sql"></textarea>
+            <button type="submit" name="button" value="send">送出</button>
+            <div>
+				<button type="submit" name="button" value="admin_page">回admin主頁</button>
+			</div>
+        </form>
+    </div>
+</body>
+</html>
