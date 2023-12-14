@@ -12,7 +12,7 @@ def index(request):
         if role == 'user':
             return redirect('main_p:index', user_id=fake_user_id)
         elif role == 'admin':
-            return redirect('/admin/')
+            return redirect('admin_page:index',)
 
     return render(request, 'login/index.html')
 
