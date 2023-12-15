@@ -52,7 +52,7 @@
 
 <h1>查詢訂單</h1>
 
-<form method="post" action="{% url 'main_p:search' user_id=1 %}">
+<form method="post" action="{% url 'main_p:search' user_id=user_id %}">
     {% csrf_token %}
 
     <label for="order_type">訂單種類</label>

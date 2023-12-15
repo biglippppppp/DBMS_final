@@ -97,6 +97,7 @@ def search(request, user_id):
         orders = api_response.get('orders')
         # Process form data and save to the database
         return render(request, 'order/sale_order.html', {'orders': orders, 'user_id': 1})
+    return render(request, 'main_p/search.html', {'user_id': user_id})
         
 def search_result(request, user_id):
     if request.method == 'POST':
