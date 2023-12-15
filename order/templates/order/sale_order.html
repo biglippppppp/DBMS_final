@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +28,7 @@
         <!-- 像這樣可以顯示輸入的user的資訊 -->
         <h1>NTUSHB 販賣訂單</h1> 
     </div>
-	
+
     {% for order in orders %}
     <h2><a href="{% url 'order:sale_order_detail' user_id=user_id order_id=order.order_id  %}">訂單編號: {{ order.order_id }}</a></h2>
     <ul>
@@ -44,4 +45,31 @@
         </li>
     </ul>
     {% endfor %}
+<form id="gotoPageForm" method="get" action="">
+    <label for="page_number">Go to Page:</label>
+    <input type="number" id="page_number" name="page" min="1" max="{{ page_range|length }}" required>
+    <button type="button" onclick="gotoPage()">Go</button>
+</form>
+
+{% for page in page_range|slice:":10" %}
+    <a href="?page={{ page }}">{{ page }}</a>
+{% endfor %}
 </body>
+
+<script>
+    function gotoPage() {
+        var pageInput = document.getElementById("page_number").value;
+        var maxPages = {{ page_range|length }};
+
+        // Validate the input
+        if (pageInput >= 1 && pageInput <= maxPages) {
+            // Construct the URL with the selected page
+            var url = window.location.pathname + '?page=' + pageInput;
+
+            // Redirect to the new URL
+            window.location.href = url;
+        } else {
+            alert("Invalid page number. Please enter a valid page between 1 and " + maxPages + ".");
+        }
+    }
+</script>

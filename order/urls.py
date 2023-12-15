@@ -14,7 +14,7 @@ urlpatterns = [
     path('want_order/<int:user_id>/detail/<int:order_id>', views.want_order_detail, name='want_order_detail'),
     path('sale_order/<int:user_id>/detail/<int:order_id>', views.sale_order_detail, name='sale_order_detail'),
     path('receive/<int:user_id>/<int:poster_id>/<int:order_id>/<str:type>', views.receive, name='receive'),
-path('api/sale_order/<int:user_id>/', SaleOrderAPIView.as_view(), name='sale-order-api'),
+    path('api/sale_order/<int:user_id>/<int:page>', SaleOrderAPIView.as_view(), name='sale-order-api'),
     path('api/want_order/<int:user_id>/', WantOrderAPIView.as_view(), name='want-order-api'),
     path('api/sale_order_detail/<int:user_id>/<int:order_id>', SaleOrderDetailAPIView.as_view(),
          name='sale-order-detail-api'),
