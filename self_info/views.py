@@ -1,4 +1,6 @@
 from django.shortcuts import render,redirect
+import requests
+import json
 class FakeUser:
         def __init__(self, user_id, user_name, role='user'):
             self.user_id = user_id
@@ -35,11 +37,19 @@ class FakeBook_detail:
             
 app_name = 'self_info'
 def index(request, user_id):
+    api_url = f'http://localhost:8000/main_p/api/{user_id}'
     if request.method == 'POST':
+        api_response = requests.post(api_url, data=request.POST)
         #改變html中按鈕的value可以達到按下不同按鈕後，跳轉到不同的頁面
         if request.POST.get('button') == 'personal_order':
             return redirect('self_info:personal_order', user_id=user_id)
-    return render(request, 'self_info/index.html', {'user_id': user_id})
+    else:
+        # Making a GET request to the API
+        api_response = requests.get(api_url)
+
+    api_data = api_response.json()
+    user_info = api_data.get('user')
+    return render(request, 'self_info/index.html', {'user_id': user_id, 'user_info': user_info})
 
 def personal_order(request, user_id):
     if request.method == 'POST':
@@ -53,79 +63,47 @@ def personal_order(request, user_id):
     return render(request, 'self_info/personal_order.html', {'user_id': user_id})
 
 def finish(request, user_id):
-
-    # 創建假用戶數據
-    user1 = FakeUser(3, 'Jerry3')
-    user2 = FakeUser(2, 'Tom')
-
-    books1 = [FakeBook("ISBN1", "100", "Description 1",user1,'finished'), FakeBook("ISBN2", "150", "Description 2",user1,'finished')]
-    books2 = [FakeBook("ISBN3", "200", "Description 3",user2,'finished')]
-    books3 = [FakeBook("ISBN4", None, "Description 1",user1,'finished'), FakeBook("ISBN2", None, "Description 2",user1,'finished')]
-    books4 = [FakeBook("ISBN5", None, "Description 3",user2,'finished')]
-    # 創建假訂單數據
-    orders = [
-        FakeOrder(1, user_id, books1),
-        FakeOrder(2, user_id, books2),
-        FakeOrder(3, user_id, books1),
-        FakeOrder(4, user_id, books2),
-        FakeOrder(5, user_id, books1),
-        FakeOrder(6, user_id, books2),
-    ]
-    want_orders = [FakeOrder(7, user_id, books3), FakeOrder(8, user_id, books4),]
+    api_url = f'http://localhost:8000/self_info/api/finish/{user_id}'
+    api_response = requests.get(api_url)
+    api_response = api_response.json()
+    orders = api_response.get('orders')
+    want_orders = api_response.get('want_orders')
     return render(request, 'self_info/finish.html',  {'orders': orders,'user_id': user_id, 'want_orders': want_orders})
 
 def posting(request, user_id):
-    user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook("ISBN1", "100", "Description 1",None,'posting'), FakeBook("ISBN2", "150", "Description 2",user1,'posting')]
-    books2 = [FakeBook("ISBN3", "200", "Description 3",None,'posting')]
-    books3 = [FakeBook("ISBN4", None, "Description 1",None,'posting'), FakeBook("ISBN2", None, "Description 2",user1,'posting')]
-    books4 = [FakeBook("ISBN5", None, "Description 3",None,'posting')]
-    # 創建假訂單數據
-    orders = [
-        FakeOrder(1, user_id, books1),
-        FakeOrder(2, user_id, books2),
-        FakeOrder(3, user_id, books1),
-        FakeOrder(4, user_id, books2),
-        FakeOrder(5, user_id, books1),
-        FakeOrder(6, user_id, books2),
-    ]
-    want_orders = [FakeOrder(7, user_id, books3), FakeOrder(8, user_id, books4),]
+    api_url = f'http://localhost:8000/self_info/api/posting/{user_id}'
+    api_response = requests.get(api_url)
+    api_response = api_response.json()
+    orders = api_response.get('orders')
+    want_orders = api_response.get('want_orders')
     return render(request, 'self_info/posting.html', {'orders': orders,'user_id': user_id, 'want_orders': want_orders})
 def received(request, user_id):
     # 創建假用戶數據
-    user1 = FakeUser(3, 'Jerry3')
-    user2 = FakeUser(2, 'Tom')
-
-    books1 = [FakeBook("ISBN1", "100", "Description 1",user1,'finished'), FakeBook("ISBN2", "150", "Description 2",user1,'finished')]
-    books2 = [FakeBook("ISBN3", "200", "Description 3",user2,'finished')]
-    books3 = [FakeBook("ISBN4", None, "Description 1",user1,'finished'), FakeBook("ISBN2", None, "Description 2",user1,'finished')]
-    books4 = [FakeBook("ISBN5", None, "Description 3",user2,'finished')]
-    # 創建假訂單數據
-    orders = [
-        FakeOrder(1, user_id, books1),
-        FakeOrder(2, user_id, books2),
-        FakeOrder(3, user_id, books1),
-        FakeOrder(4, user_id, books2),
-        FakeOrder(5, user_id, books1),
-        FakeOrder(6, user_id, books2),
-    ]
-    want_orders = [FakeOrder(7, user_id, books3), FakeOrder(8, user_id, books4),]
+    api_url = f'http://localhost:8000/self_info/api/receive/{user_id}'
+    api_response = requests.get(api_url)
+    api_response = api_response.json()
+    orders = api_response.get('orders')
+    want_orders = api_response.get('want_orders')
     return render(request, 'self_info/received.html', {'orders': orders,'user_id': user_id, 'want_orders': want_orders})
 
 def finish_sell_detail(request, order_id, user_id):
-    user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook_detail("ISBN1", "100", "Description 1",user1,'finished'), FakeBook_detail("ISBN2", "150", "Description 2",user1,'finished')]
+    api_url = f'http://localhost:8000/self_info/api/finish_sell_detail/{user_id}/{order_id}'
+    api_response = requests.get(api_url)
+    api_response = api_response.json()
+    books = api_response.get('books')
     
     if request.method == 'POST':
         for key, value in request.POST.items():
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/finish_sell_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/finish_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
 
 def posting_sell_detail(request, order_id, user_id):
-    user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook_detail("ISBN1", "100", "Description 1",None,'posting'), FakeBook_detail("ISBN2", "150", "Description 2",user1,'posting')]
+    api_url = f'http://localhost:8000/self_info/api/posting_sell_detail/{user_id}/{order_id}'
+    api_response = requests.get(api_url)
+    api_response = api_response.json()
+    books = api_response.get('books')
     if request.method == 'POST':
         # 檢查每個按鈕
         for key, value in request.POST.items():
@@ -140,33 +118,38 @@ def posting_sell_detail(request, order_id, user_id):
                     renew_order_id = int(parts[2])
                     renew_status = request.POST.get(f'status_{renew_isbn}')
 
-    return render(request, 'self_info/detail/posting_sell_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/posting_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
 
 def received_sell_detail(request, order_id, user_id):
-    user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook_detail("ISBN1", "100", "Description 1",user1,'finished'), FakeBook_detail("ISBN2", "150", "Description 2",user1,'finished')]
-    
+    api_url = f'http://localhost:8000/self_info/api/receive_sell_detail/{user_id}/{order_id}'
+    api_response = requests.get(api_url)
+    api_response = api_response.json()
+    books = api_response.get('books')
     if request.method == 'POST':
         for key, value in request.POST.items():
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/received_sell_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/received_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
 
 def finish_want_detail(request, order_id, user_id):
-    user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook_detail("ISBN1", None, "Description 1",user1,'finished'), FakeBook_detail("ISBN2", None, "Description 2",user1,'finished')]
-    
+    api_url = f'http://localhost:8000/self_info/api/finish_want_detail/{user_id}/{order_id}'
+    api_response = requests.get(api_url)
+    api_response = api_response.json()
+    books = api_response.get('books')
+
     if request.method == 'POST':
         for key, value in request.POST.items():
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/finish_want_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/finish_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
 
 def posting_want_detail(request, order_id, user_id):
-    user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook_detail("ISBN1", None, "Description 1",None,'posting'), FakeBook_detail("ISBN2", None, "Description 2",user1,'posting')]
+    api_url = f'http://localhost:8000/self_info/api/posting_want_detail/{user_id}/{order_id}'
+    api_response = requests.get(api_url)
+    api_response = api_response.json()
+    books = api_response.get('books')
     if request.method == 'POST':
         # 檢查每個按鈕
         for key, value in request.POST.items():
@@ -181,11 +164,13 @@ def posting_want_detail(request, order_id, user_id):
                     renew_order_id = int(parts[2])
                     renew_status = request.POST.get(f'status_{renew_isbn}')
 
-    return render(request, 'self_info/detail/posting_want_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/posting_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
 
 def received_want_detail(request, order_id, user_id):
-    user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook_detail("ISBN1", None, "Description 1",user1,'finished'), FakeBook_detail("ISBN2", None, "Description 2",user1,'finished')]
+    api_url = f'http://localhost:8000/self_info/api/receive_want_detail/{user_id}/{order_id}'
+    api_response = requests.get(api_url)
+    api_response = api_response.json()
+    books = api_response.get('books')
     if request.method == 'POST':
         for key, value in request.POST.items():
                 if value == 'evaluate':

@@ -25,14 +25,15 @@
 <body>
     <div id="title">
         <!-- 像這樣可以顯示輸入的user的資訊 -->
-        <h1>NTUSHB - 您好！{{user.user_name}}</h1> 
+        <h1>NTUSHB - 您好！{{ user_info.username }}</h1>
     </div>
     <div id="login-form">
         <form method="post">
             {% csrf_token %}
 			<div>
 				<button type="submit" name="button" value="self_info">個人資訊</button>
-				<input type="button" value="新增" onclick="location.href='{% url 'main_p:create_order' user_id=1%}'">
+
+				<input type="button" value="新增" onclick="location.href='{% url 'main_p:create_order' user_id=user_id%}'">
 			</div>
 
 			<div>
@@ -42,6 +43,8 @@
 			<div>
 				<input type="button" value="查詢" onclick="location.href='{% url 'main_p:search' user_id=1%}'">
 				<input type="button" value="評價" onclick="location.href='{% url 'evaluate:evaluate_user' user_id=1 %}'">
+				<input type="button" value="查詢" onclick="location.href='{% url 'main_p:search'%}'">
+				<input type="button" value="評價" onclick="location.href='{% url 'evaluate:evaluate_user' user_id=user_id %}'">
 			</div>
         </form>
 </body>
