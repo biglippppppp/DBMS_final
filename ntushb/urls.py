@@ -25,4 +25,5 @@ urlpatterns = [
     path('order/', include('order.urls')),
     path('self_info/', include('self_info.urls')),
     path('evaluate/', include('evaluate.urls')),
+    path('admin_page/', include('admin_page.urls')),
 ]
