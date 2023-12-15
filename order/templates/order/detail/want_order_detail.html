@@ -38,10 +38,10 @@
                 <span style="color: blue;">作者:</span> {{ book.author }},
                 <span style="color: blue;">訂單描述:</span> {{ book.description }},
                 <span style="color: blue;">類別:</span> {{ book.category }},<br>
-                <span style="color: blue;">所屬課程:</span> {{ book.courseName }},
+                <span style="color: blue;">所屬課程:</span> {{ book.course_name }},
                 <span style="color: blue;">課程編號:</span> {{ book.courseID }},
                 <span style="color: blue;">學年度:</span>{{ book.academic_year }},
-                <span style="color: blue;">授課教師:</span>{{ book.teacherName }},
+                <span style="color: blue;">授課教師:</span>{{ book.teacher_name }},
                 {% if book.status == 'posting' %}
                 <button type="submit"  name="button" value="receive">接受訂單</button><br>
                 {% endif %}
