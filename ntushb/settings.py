@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'order',
     'self_info',
     'evaluate',
+    'admin_page',
 ]
 
 MIDDLEWARE = [
