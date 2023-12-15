@@ -42,7 +42,24 @@
                 <label>{{ output }}</label>
             {% else %}
             <div class="output-container">
-                {{ output|safe }}
+                <table>
+                    <thead>
+                        <tr>
+                            {% for key, value in query_result.0.items %}
+                                <th>{{ key }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in query_result %}
+                            <tr>
+                                {% for key, value in row.items %}
+                                    <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
             {% endif %}
         </form>

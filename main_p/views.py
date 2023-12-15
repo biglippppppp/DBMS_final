@@ -26,66 +26,67 @@ def index(request, user_id):
     
 def create_order(request, user_id):
     if request.method == 'POST':
-        api_url = f'http://localhost:8000/main_p/api/posts/{user_id}/'
-        order_type = request.POST.get('order_type')
-        # Process form data and save to the database
-        if order_type == 'sell':
-            book_counter = 1
-            form_data = {
-                'order_type': order_type,
-            }
+        if request.POST.get('button') == 'submit':
+            api_url = f'http://localhost:8000/main_p/api/posts/{user_id}/'
+            order_type = request.POST.get('order_type')
+            # Process form data and save to the database
+            if order_type == 'sell':
+                book_counter = 1
+                form_data = {
+                    'order_type': order_type,
+                }
 
-            while True:
-                isbn_key = f'isbn_{book_counter}'
-                price_key = f'price_{book_counter}'
-                description_key = f'description_{book_counter}'
+                while True:
+                    isbn_key = f'isbn_{book_counter}'
+                    price_key = f'price_{book_counter}'
+                    description_key = f'description_{book_counter}'
 
-                isbn = request.POST.get(isbn_key)
+                    isbn = request.POST.get(isbn_key)
 
-                if isbn is None:
-                    # No more books, break out of the loop
-                    break
+                    if isbn is None:
+                        # No more books, break out of the loop
+                        break
 
-                # Collect data for the current book
-                form_data[f'isbn_{book_counter}'] = isbn
-                form_data[f'price_{book_counter}'] = request.POST.get(price_key)
-                form_data[f'description_{book_counter}'] = request.POST.get(description_key)
+                    # Collect data for the current book
+                    form_data[f'isbn_{book_counter}'] = isbn
+                    form_data[f'price_{book_counter}'] = request.POST.get(price_key)
+                    form_data[f'description_{book_counter}'] = request.POST.get(description_key)
 
-                book_counter += 1
+                    book_counter += 1
 
-            # Make a single API request after the loop
-            api_response = requests.post(api_url, data=form_data)
-            api_response = api_response.json()
-            order_id = api_response.get('order_id')
-            return redirect('self_info:posting_sell_detail', user_id=user_id, order_id=order_id)
+                # Make a single API request after the loop
+                api_response = requests.post(api_url, data=form_data)
+                api_response = api_response.json()
+                order_id = api_response.get('order_id')
+                return redirect('self_info:posting_sell_detail', user_id=user_id, order_id=order_id)
 
-        else:
-            book_counter = 1
-            form_data = {
-                'order_type': order_type,
-            }
+            else:
+                book_counter = 1
+                form_data = {
+                    'order_type': order_type,
+                }
 
-            while True:
-                isbn_key = f'isbn_{book_counter}'
-                description_key = f'description_{book_counter}'
+                while True:
+                    isbn_key = f'isbn_{book_counter}'
+                    description_key = f'description_{book_counter}'
 
-                isbn = request.POST.get(isbn_key)
+                    isbn = request.POST.get(isbn_key)
 
-                if isbn is None:
-                    # No more books, break out of the loop
-                    break
+                    if isbn is None:
+                        # No more books, break out of the loop
+                        break
 
-                # Collect data for the current book
-                form_data[f'isbn_{book_counter}'] = isbn
-                form_data[f'description_{book_counter}'] = request.POST.get(description_key)
+                    # Collect data for the current book
+                    form_data[f'isbn_{book_counter}'] = isbn
+                    form_data[f'description_{book_counter}'] = request.POST.get(description_key)
 
-                book_counter += 1
+                    book_counter += 1
 
-            # Make a single API request after the loop
-            api_response = requests.post(api_url, data=form_data)
-            api_response = api_response.json()
-            order_id = api_response.get('order_id')
-            return redirect('self_info:posting_want_detail', user_id=user_id, order_id=order_id)
+                # Make a single API request after the loop
+                api_response = requests.post(api_url, data=form_data)
+                api_response = api_response.json()
+                order_id = api_response.get('order_id')
+                return redirect('self_info:posting_want_detail', user_id=user_id, order_id=order_id)
 
     return render(request, 'main_p/create_order.html', {'user_id':user_id})
 

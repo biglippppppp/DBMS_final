@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 import pandas as pd
+from django.db import connection
 
 app_name = 'admin_page'
 def index(request):
@@ -27,18 +28,22 @@ def select(request):
             sql_sentence = 'SELECT ' + select_content + ' FROM ' + selected_table
         else:
             sql_sentence = 'SELECT ' + select_content + ' FROM ' + selected_table + " " + sql_content
-        print(sql_sentence)
         try:
-            #與資料庫連線
-            fake_output = {'user_id': ['1','2'], 'user_name': ['Jerry', 'berry'], 'role': ['user', 'user']}
-            output = fake_output
-            type = 'select'
-        except:
-            output = 'failed connect to database'
+            with connection.cursor() as cursor:
+                cursor.execute(sql_sentence)
+                query_result = [dict(zip([col[0] for col in cursor.description], row)) for row in cursor.fetchall()]
+                type = 'select'
+                request.session['type'] = type
+
+        except Exception as e:
+            query_result = None
+            output = f"Error executing query: {str(e)}"
             type = 'not_select'
-        request.session['output'] = output
-        request.session['type'] = type
-        return redirect('admin_page:output')
+            request.session['output'] = output
+            request.session['type'] = type
+            return render(request, 'admin_page/output.html')
+
+        return render(request, 'admin_page/output.html', {'query_result': query_result})
     return render(request, 'admin_page/select.html')
 
 def insert(request):
@@ -51,11 +56,14 @@ def insert(request):
         sql_content = request.POST.get('sql')
         sql_sentence = 'INSERT INTO ' + selected_table + ' VALUES (' + sql_content + ')'
         print(sql_sentence)
+
         try:
-            #與資料庫連線
-            output = 'request success'
-        except:
-            output = 'failed connect to database'
+            with connection.cursor() as cursor:
+                cursor.execute(sql_sentence)
+            output = "request success"
+        except Exception as e:
+            output = f"Error executing query: {str(e)}"
+
         request.session['output'] = output
         request.session['type'] = 'not_select'
         return redirect('admin_page:output')
@@ -71,11 +79,13 @@ def delete(request):
         where_content = request.POST.get('sql')
         sql_sentence = 'DELETE FROM ' + selected_table + ' WHERE ' + where_content
         print(sql_sentence)
+
         try:
-            #與資料庫連線
-            output = 'request success'
-        except:
-            output = 'failed connect to database'
+            with connection.cursor() as cursor:
+                cursor.execute(sql_sentence)
+            output = "request success"
+        except Exception as e:
+            output = f"Error executing query: {str(e)}"
         request.session['output'] = output
         request.session['type'] = 'not_select'
         return redirect('admin_page:output')
@@ -93,10 +103,11 @@ def update(request):
             sql_sentence = 'UPDATE ' + selected_table + ' SET ' + set_content + ' WHERE ' + where_content
             print(sql_sentence)
             try:
-                #與資料庫連線
-                output = 'request success'
-            except:
-                output = 'failed connect to database'
+                with connection.cursor() as cursor:
+                    cursor.execute(sql_sentence)
+                output = "request success"
+            except Exception as e:
+                output = f"Error executing query: {str(e)}"
             request.session['output'] = output
             request.session['type'] = 'not_select'
             return redirect('admin_page:output')
