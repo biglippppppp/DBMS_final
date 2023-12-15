@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>填寫{{ target_user }}的評論 </h1>
-	<form action="{% url 'submit_review' target_user %}" method="post">
+	<form action="{% url 'write_review' target_user %}" method="post">
         {% csrf_token %}<!--Django 的模板標籤-->
         <label for="score">評分：</label>
         <select name="score" id="score">

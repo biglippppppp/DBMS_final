@@ -96,3 +96,34 @@ def sale_order_detail(request, user_id, order_id):
 def receive(request, user_id, poster_id, order_id, type):
     fake_poster = FakeUser(poster_id, 'Jerry3')
     return render(request, 'order/receive.html', {'type':type, 'user_id':user_id, 'poster': fake_poster, 'order_id': order_id})
+    api_url = f'http://localhost:8000/order/api/receive/{user_id}/{poster_id}>/{order_id}/{type}'
+    api_response = requests.get(api_url)
+    api_response = api_response.json()
+    poster = api_response.get('poster')
+    return render(request, 'order/receive.html', {'type':type, 'user_id':user_id, 'poster': poster, 'order_id': order_id})
+"""
+def order_list(request):
+    # 獲取所有訂單對象，你的邏輯可能會有所不同
+    all_orders = Order.objects.all()
+
+    # 定義每頁顯示的資料筆數
+    items_per_page = 20
+
+    # 將所有訂單對象分頁
+    paginator = Paginator(all_orders, items_per_page)
+
+    # 獲取當前頁碼
+    page = request.GET.get('page')
+
+    try:
+        # 根據當前頁碼獲取對應頁的訂單對象
+        orders = paginator.page(page)
+    except PageNotAnInteger:
+        # 如果page不是整數，將第一頁返回
+        orders = paginator.page(1)
+    except EmptyPage:
+        # 如果page超出範圍，返回最後一頁
+        orders = paginator.page(paginator.num_pages)
+
+    return render(request, 'your_template.html', {'orders': orders})
+"""
