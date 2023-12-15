@@ -1,0 +1,14 @@
+# 忽略 Python 編譯文件
+__pycache__/
+
+# 忽略項目中的 .pyc 文件
+*.pyc
+
+# 忽略編譯後的文件
+*.pyo
+*.pyc
+*.pyd
+
+# 忽略 macOS 系統檔案
+.DS_Store
+
