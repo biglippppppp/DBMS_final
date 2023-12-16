@@ -1,0 +1,28 @@
+<!-- create_saleOrder.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Buy Order</title>
+</head>
+<body>
+
+    <h2>新增徵求訂單</h2>
+	<form action="{% url 'main_p:create_buyOrder' user_id=user_id %}" method="post">
+        {% csrf_token %}
+
+        {{ formset.management_form }}
+
+        {% for form in formset %}
+            <div class="book-input">
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+
+        <button type="submit">Submit</button>
+    </form>
+
+</body>
+</html>
