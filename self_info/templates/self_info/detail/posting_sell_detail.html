@@ -44,7 +44,7 @@
                 <span style="color: blue;">課程編號:</span> {{ book.courseID }},
                 <span style="color: blue;">學年度:</span>{{ book.academic_year }},
                 <span style="color: blue;">授課教師:</span>{{ book.teacher_name }},
-                {% if book.receiver == None %}
+                {% if book.receiver.user_name == "不存在" %}
                 <span style="color: blue;">訂單狀態:</span>
                 <select name="status_{{ book.isbn }}">
                     <option value="finished" {% if book.status == 'finished' %}selected{% endif %}>已完成</option>
@@ -53,7 +53,7 @@
                 </select><br>
                 <button type="submit" name="button_{{book.isbn}}_{{order_id}}" value="renew">更新狀態</button>
                 {% endif %}
-                {% if book.receiver.user_name != " 不存在" %}
+                {% if book.receiver.user_name != "不存在" %}
                 <span style="color: blue;">接受訂單者:</span> {{ book.receiver.user_name }}
                 <button type="submit"  name="button_{{ book.receiver.user_id}}" value="evaluate">查看評價</button><br>
                 {% endif %}
