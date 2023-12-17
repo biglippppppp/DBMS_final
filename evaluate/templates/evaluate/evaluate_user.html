@@ -31,7 +31,7 @@
         {% for buyer in received_buyers %}
             <li>
                 {{ buyer.username }}
-                <button onclick="location.href='{% url 'evaluate:write_review' buyer.userid %}'">我要評論</button>
+                <button onclick="location.href='{% url 'evaluate:write_review' user_id=user_id target_id=buyer.userid %}'">我要評論</button>
             </li>
         {% endfor %}
     </ul>
@@ -40,7 +40,7 @@
         {% for seller in given_sellers %}
             <li>
                 {{ seller.username }}
-                <button onclick="location.href='{% url 'evaluate:write_review' seller.userid %}'">我要評論</button>
+                <button onclick="location.href='{% url 'evaluate:write_review' user_id=user_id target_id=seller.userid %}'">我要評論</button>
             </li>
         {% endfor %}
     </ul>

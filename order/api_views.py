@@ -22,6 +22,7 @@ from self_info.api_views import BookDetailSerializer
 from self_info.models import User
 from evaluate.api_views import UsersSerializer
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.utils import timezone
 
 
 
@@ -228,9 +229,22 @@ class WantOrderDetailAPIView(APIView):
         return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id})
 
 class ReceiveAPIView(APIView):
-    def get(self, request, user_id, poster_id, order_id, type,  *args, **kwargs):
+    def post(self, request, user_id, poster_id, order_id, type,  *args, **kwargs):
         poster_info = Users.objects.get(userid=poster_id)
         serializer = UsersSerializer(poster_info)
+        current_datetime = timezone.now()
+        current_date = current_datetime.date()
+        if type == 'sale_order':
+            sell_instance = ReceiveSale.objects.filter(orderid__orderid=order_id)
+            sell_instance.userid = user_id
+            sell_instance.reseivedate = current_date
+            sell_instance.save()
+        else:
+            instance = LookFor.objects.filter(orderid__orderid=order_id)
+            instance.userid = user_id
+            instance.reseivedate = current_date
+            instance.save()
+
 
         # Return the serialized data in the response
         return Response({'poster': serializer.data})

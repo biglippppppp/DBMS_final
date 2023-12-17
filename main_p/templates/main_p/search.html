@@ -75,12 +75,11 @@
     <label for="keyword">關鍵字(非必填項目)</label>
     <input type="text" id="keyword" name="keyword">
 
-    <form method="post" action="{% url 'main_p:search_result' user_id=1%}">
+    <form method="post" action="{% url 'main_p:search_result' user_id=user_id%}">
     {% csrf_token %}
     <!-- Form fields -->
 
-	<input type="button" value="submit" class="custom-button" onclick="location.href='{% url 'main_p:search_result' user_id=1%}'">
-	
+<button type="submit">Submit</button>
 
 </form>
 <P>類別說明：<P>

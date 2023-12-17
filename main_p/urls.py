@@ -13,6 +13,6 @@ urlpatterns = [
     path('create_order/<int:user_id>', views.create_order, name='create_order'),
     path('index/', views.self_info, name='self_info'),
     path('api/<int:user_id>/', MainPAPIView.as_view(), name='main-p-api'),
-    path('api/search/', SearchAPIView.as_view(), name='search-api'),
+    path('api/search/<int:user_id>', SearchAPIView.as_view(), name='search-api'),
     path('api/posts/<int:user_id>/', PostAPIView.as_view(), name='post-api'),
 ]

@@ -12,9 +12,10 @@ class LoginAPIView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         role = request.data.get('role')
+        email = request.data.get('email')
 
         # 使用 Django 的 authenticate 函数验证用户
-        user = Users.objects.get(username=username)
+        user = Users.objects.get(username=username, email=email)
         user_id = user.userid
         user_role_object = UserRole.objects.get(userid=user_id)
         user_role = user_role_object.role

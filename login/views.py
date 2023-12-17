@@ -7,6 +7,7 @@ def index(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        email = request.POST.get('email')
         role = request.POST.get('role')
 
 
@@ -14,7 +15,7 @@ def index(request):
         api_url = 'http://localhost:8000/api/login/'
 
         # Making a POST request to the API
-        api_response = requests.post(api_url, data={'username': username, 'password': password, 'role': role})
+        api_response = requests.post(api_url, data={'username': username, 'password': password, 'role': role, 'email': email})
 
         # Checking if the API request was successful (status code 200)
         if api_response.status_code == 200:

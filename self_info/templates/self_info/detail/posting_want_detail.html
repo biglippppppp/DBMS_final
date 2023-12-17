@@ -45,9 +45,9 @@
                 {% if book.receiver == None %}
                 <span style="color: blue;">訂單狀態:</span>
                 <select name="status_{{ book.isbn }}">
-                    <option value="finished" {% if book.status == 'finished' %}selected{% endif %}>已完成</option>
-                    <option value="posting" {% if book.status == 'posting' %}selected{% endif %}>張貼中</option>
-                    <option value="canceled" {% if book.status == 'canceled' %}selected{% endif %}>已取消</option>
+                    <option value="Finished" {% if book.status == 'Finished' %}selected{% endif %}>已完成</option>
+                    <option value="Posting" {% if book.status == 'Posting' %}selected{% endif %}>張貼中</option>
+                    <option value="Canceled" {% if book.status == 'Canceled' %}selected{% endif %}>已取消</option>
                 </select><br>
                 <button type="submit" name="button_{{book.isbn}}_{{order_id}}" value="renew">更新狀態</button>
                 {% endif %}

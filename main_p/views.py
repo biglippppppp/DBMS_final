@@ -92,12 +92,21 @@ def create_order(request, user_id):
 
 def search(request, user_id):
     if request.method == 'POST':
-        api_url = f'http://localhost:8000/main_p/api/search/'
-        api_response = requests.get(api_url)
+        api_url = f'http://localhost:8000/main_p/api/search/{user_id}'
+        order_type = request.POST.get('order_type')
+        category = request.POST.get('category')
+        keyword = request.POST.get('keyword')
+
+        form_data = {"order_type": order_type,
+                     "category": category,
+                     "keyword": keyword
+                    }
+
+        api_response = requests.post(api_url, json=form_data)
         api_response = api_response.json()
         orders = api_response.get('orders')
         # Process form data and save to the database
-        return render(request, 'order/sale_order.html', {'orders': orders, 'user_id': 1})
+        return render(request, 'main_p/search_result.html', {'orders': orders, 'user_id': user_id})
     return render(request, 'main_p/search.html', {'user_id': user_id})
         
 def search_result(request, user_id):

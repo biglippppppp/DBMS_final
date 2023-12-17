@@ -9,6 +9,7 @@ from .api_views import PostingAPIView
 from .api_views import ReceiveAPIView
 from .api_views import ReceiveSellAPIView
 from .api_views import ReceiveWantAPIView
+from .api_views import RenewStatusAPIView
 
 app_name = 'self_info'
 urlpatterns = [
@@ -33,5 +34,6 @@ urlpatterns = [
     path('api/receive/<int:user_id>/', ReceiveAPIView.as_view(), name='receive-api'),
     path('api/receive_sell_detail/<int:user_id>/<int:order_id>', ReceiveSellAPIView.as_view(), name='receive-sell-api'),
     path('api/receive_want_detail/<int:user_id>/<int:order_id>', ReceiveWantAPIView.as_view(), name='receive-want-api'),
+    path('api/renew', RenewStatusAPIView.as_view(), name='renew-status-api'),
 
 ]

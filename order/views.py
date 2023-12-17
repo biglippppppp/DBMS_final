@@ -100,7 +100,7 @@ def sale_order_detail(request, user_id, order_id):
     api_response = requests.get(api_url)
     api_response = api_response.json()
     books = api_response.get('books')
-    poster_id = SaleOrder.objects.get(orderid=order_id).userid
+    poster_id = SaleOrder.objects.get(orderid=order_id).userid.userid
     if request.method == 'POST':
         for key, value in request.POST.items():
                 if value == 'receive':
@@ -108,8 +108,9 @@ def sale_order_detail(request, user_id, order_id):
     return render(request, 'order/detail/sale_order_detail.html', {'books':books,'user_id': user_id, 'order_id': order_id})
 
 def receive(request, user_id, poster_id, order_id, type):
-    api_url = f'http://localhost:8000/order/api/receive/{user_id}/{poster_id}>/{order_id}/{type}'
-    api_response = requests.get(api_url)
+    api_url = f'http://localhost:8000/order/api/receive/{user_id}/{poster_id}/{order_id}/{type}'
+    api_response = requests.post(api_url)
+    print(api_response.content)
     api_response = api_response.json()
     poster = api_response.get('poster')
     return render(request, 'order/receive.html', {'type':type, 'user_id':user_id, 'poster': poster, 'order_id': order_id})

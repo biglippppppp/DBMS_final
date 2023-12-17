@@ -18,6 +18,8 @@ from .models import Book_detail
 from .models import Order
 from .models import User
 from rest_framework import serializers
+from django.db import transaction
+from django.utils import timezone
 
 
 
@@ -98,7 +100,7 @@ class FinishAPIView(APIView):
                         receivername = Users.objects.get(userid=receiverid).username
                         receiver = User(receiverid, receivername)
                     except ReceiveSale.DoesNotExist:
-                        receiver = User(0, "不存在")
+                        receiver = None
                     book = Book.objects.get(isbn=isbn)
                     title = book.title
                     author = book.author
@@ -160,13 +162,7 @@ class PostingAPIView(APIView):
                     price = sell.price
                     description = sell.description
                     status = 'posting'
-                    try:
-                        receive_sale = ReceiveSale.objects.get(orderid=order.orderid)
-                        receiverid = receive_sale.userid.userid
-                        receivername = Users.objects.get(userid=receiverid).username
-                        receiver = User(receiverid, receivername)
-                    except ReceiveSale.DoesNotExist:
-                        receiver = User(0, "不存在")
+                    receiver = None
                     book = Book.objects.get(isbn=isbn)
                     title = book.title
                     author = book.author
@@ -192,7 +188,7 @@ class PostingAPIView(APIView):
                         receivername = Users.objects.get(userid=receiverid).username
                         receiver = User(receiverid, receivername)
                     except ReceiveWant.DoesNotExist:
-                        receiver = User(0, "不存在")
+                        receiver = None
 
                     book = Book.objects.get(isbn=isbn)
                     title = book.title
@@ -229,7 +225,7 @@ class FinishSellAPIView(APIView):
                     receivername = Users.objects.get(userid=receiverid).username
                     receiver = User(receiverid, receivername)
                 except ReceiveSale.DoesNotExist:
-                    receiver = User(0, "不存在")
+                    receiver = None
                 book = Book.objects.get(isbn=isbn)
                 title = book.title
                 author = book.author
@@ -280,7 +276,7 @@ class FinishWantAPIView(APIView):
                     receivername = Users.objects.get(userid=receiverid).username
                     receiver = User(receiverid, receivername)
                 except ReceiveWant.DoesNotExist:
-                    receiver = User(0, "不存在")
+                    receiver = None
                 book = Book.objects.get(isbn=isbn)
                 title = book.title
                 author = book.author
@@ -328,7 +324,7 @@ class PostingSellAPIView(APIView):
                 price = sell.price
                 description = sell.description
                 status = 'posting'
-                receiver = User(0, "不存在")
+                receiver = None
                 book = Book.objects.get(isbn=isbn)
                 title = book.title
                 author = book.author
@@ -563,3 +559,26 @@ class ReceiveWantAPIView(APIView):
         serialized_data = serializer.data
 
         return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id})
+
+
+class RenewStatusAPIView(APIView):
+    def post(self, request,  *args, **kwargs):
+        with transaction.atomic():
+            order_id = request.data.get('order_id')
+            isbn = request.data.get('isbn')
+            status = request.data.get('status')
+            type = request.data.get('type')
+            current_datetime = timezone.now()
+            current_date = current_datetime.date()
+            if type == 'sell':
+                sell_instance = Sell.objects.select_for_update().get(orderid__orderid=order_id, isbn__isbn=isbn)
+                sell_instance.status = status
+                sell_instance.finishdate = current_date
+                sell_instance.save()
+            else:
+                look_for_instance = LookFor.objects.select_for_update().get(orderid__orderid=order_id, isbn_id=isbn)
+                look_for_instance.status = status
+                look_for_instance.finishdate = current_date
+                look_for_instance.save()
+            return Response()
+
