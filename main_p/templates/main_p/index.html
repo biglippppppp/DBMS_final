@@ -20,30 +20,43 @@
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+		
+		.custom-button {
+        background-color:#E0E0E0;
+        color: black;
+        padding: 10px 15px;
+        border: None;
+        border-radius: 4px;
+        cursor: pointer;
+		width: 150px;
+		margin-bottom: 10px;
+		}
+
+		.custom-button:hover {
+			background-color:#66B3FF;
     </style>
 </head>
 <body>
     <div id="title">
         <!-- 像這樣可以顯示輸入的user的資訊 -->
-        <h1>NTUSHB - 您好！{{user.user_name}}</h1> 
+        <h1>NTUSHB - 您好！{{ user_info.username }}</h1> 
     </div>
     <div id="login-form">
         <form method="post">
             {% csrf_token %}
 			<div>
-				<button type="submit" name="button" value="self_info">個人資訊</button>
+				<button type="submit" name="button" value="self_info" class="custom-button">個人資訊</button>
 
-				<input type="button" value="新增" onclick="location.href='{% url 'main_p:new_create_order' user_id=user_id%}'">
+				<input type="button" value="新增" class="custom-button" onclick="location.href='{% url 'main_p:new_create_order' user_id=user_id%}'">
 			</div>
 
 			<div>
-				<button type="submit" name="button" value="sale_order">查看所有販賣訂單</button>
-				<button type="submit" name="button" value="want_order">查看所有徵求訂單</button>
+				<button type="submit" name="button" value="sale_order" class="custom-button">查看所有販賣訂單</button>
+				<button type="submit" name="button" value="want_order" class="custom-button">查看所有徵求訂單</button>
 			</div>
 			<div>
-				<input type="button" value="評價" onclick="location.href='{% url 'evaluate:evaluate_user' user_id=1 %}'">
-				<input type="button" value="查詢" onclick="location.href='{% url 'main_p:search' user_id=user_id%}'">
-				<input type="button" value="評價" onclick="location.href='{% url 'evaluate:evaluate_user' user_id=user_id %}'">
+				<input type="button" value="查詢" class="custom-button" onclick="location.href='{% url 'main_p:search' user_id=user_id%}'">
+				<input type="button" value="評價" class="custom-button" onclick="location.href='{% url 'evaluate:evaluate_user' user_id=user_id %}'">
 			</div>
         </form>
 </body>
