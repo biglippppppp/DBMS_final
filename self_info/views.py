@@ -87,6 +87,9 @@ def received(request, user_id):
     return render(request, 'self_info/received.html', {'orders': orders,'user_id': user_id, 'want_orders': want_orders})
 
 def finish_sell_detail(request, order_id, user_id):
+    
+    fake_receivers = [FakeUser(user_id=1, user_name='假收書人1'),FakeUser(user_id=2, user_name='假收書人2')]
+    
     api_url = f'http://localhost:8000/self_info/api/finish_sell_detail/{user_id}/{order_id}'
     api_response = requests.get(api_url)
     api_response = api_response.json()
@@ -97,7 +100,7 @@ def finish_sell_detail(request, order_id, user_id):
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/finish_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/finish_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id, 'receivers': fake_receivers})
 
 def posting_sell_detail(request, order_id, user_id):
     api_url = f'http://localhost:8000/self_info/api/posting_sell_detail/{user_id}/{order_id}'
@@ -118,7 +121,7 @@ def posting_sell_detail(request, order_id, user_id):
                     renew_order_id = int(parts[2])
                     renew_status = request.POST.get(f'status_{renew_isbn}')
 
-    return render(request, 'self_info/detail/posting_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/posting_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id, 'receivers': fake_receivers})
 
 def received_sell_detail(request, order_id, user_id):
     api_url = f'http://localhost:8000/self_info/api/receive_sell_detail/{user_id}/{order_id}'
@@ -133,6 +136,9 @@ def received_sell_detail(request, order_id, user_id):
     return render(request, 'self_info/detail/received_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
 
 def finish_want_detail(request, order_id, user_id):
+
+    fake_receivers = [FakeUser(user_id=1, user_name='假收書人1'),FakeUser(user_id=2, user_name='假收書人2')]
+    
     api_url = f'http://localhost:8000/self_info/api/finish_want_detail/{user_id}/{order_id}'
     api_response = requests.get(api_url)
     api_response = api_response.json()
@@ -143,9 +149,12 @@ def finish_want_detail(request, order_id, user_id):
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/finish_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/finish_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id, 'receivers': fake_receivers})
 
 def posting_want_detail(request, order_id, user_id):
+
+    fake_receivers = [FakeUser(user_id=1, user_name='假收書人1'),FakeUser(user_id=2, user_name='假收書人2')]
+
     api_url = f'http://localhost:8000/self_info/api/posting_want_detail/{user_id}/{order_id}'
     api_response = requests.get(api_url)
     api_response = api_response.json()
@@ -164,9 +173,12 @@ def posting_want_detail(request, order_id, user_id):
                     renew_order_id = int(parts[2])
                     renew_status = request.POST.get(f'status_{renew_isbn}')
 
-    return render(request, 'self_info/detail/posting_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/posting_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id, 'receivers': fake_receivers})
 
 def received_want_detail(request, order_id, user_id):
+
+    fake_receivers = [FakeUser(user_id=1, user_name='假收書人1'),FakeUser(user_id=2, user_name='假收書人2')]
+    
     api_url = f'http://localhost:8000/self_info/api/receive_want_detail/{user_id}/{order_id}'
     api_response = requests.get(api_url)
     api_response = api_response.json()

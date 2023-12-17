@@ -85,7 +85,7 @@ def sale_order_detail(request, user_id, order_id):
     return render(request, 'order/detail/sale_order_detail.html', {'books':books,'user_id': user_id, 'order_id': order_id})
 
 def receive(request, user_id, poster_id, order_id, type):
-    api_url = f'http://localhost:8000/order/api/receive/{user_id}/{poster_id}>/{order_id}/{type}'
+    api_url = f'http://localhost:8000/order/api/receive/{user_id}/{poster_id}/{order_id}/{type}'
     api_response = requests.get(api_url)
     api_response = api_response.json()
     poster = api_response.get('poster')
