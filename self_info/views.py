@@ -177,7 +177,7 @@ def received_want_detail(request, order_id, user_id):
                     print(key)
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/received_want_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/received_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
     
 def evaluate_detail(request, user_id):
     # Your view logic here

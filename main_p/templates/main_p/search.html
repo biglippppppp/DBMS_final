@@ -14,7 +14,9 @@
         h1 {
             text-align: center;
         }
-
+        p {
+            text-align: center;
+        }
         form {
             max-width: 600px;
             margin: 0 auto;
@@ -51,8 +53,8 @@
 <body>
 
 <h1>查詢訂單</h1>
-
-<form method="post" action="{% url 'main_p:search' user_id=1 %}">
+<p><a href="/main_p/{{user_id}}">回主頁</a></p>
+<form method="post">
     {% csrf_token %}
 
     <label for="order_type">訂單種類</label>
@@ -75,11 +77,11 @@
     <label for="keyword">關鍵字(非必填項目)</label>
     <input type="text" id="keyword" name="keyword">
 
-    <form method="post" action="{% url 'main_p:search_result' user_id=1%}">
+    <form method="post" action="{% url 'main_p:search_result' user_id=user_id%}">
     {% csrf_token %}
     <!-- Form fields -->
 
-	<input type="button" value="submit" class="custom-button" onclick="location.href='{% url 'main_p:search_result' user_id=1%}'">
+	<input type="button" value="submit" class="custom-button" onclick="location.href='{% url 'main_p:search_result' user_id=user_id%}'">
 	
 
 </form>

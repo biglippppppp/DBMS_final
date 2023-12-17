@@ -5,6 +5,7 @@ from django.contrib import messages
 
 def index(request):
     if request.method == 'POST':
+        email = request.POST.get('email')
         username = request.POST.get('username')
         password = request.POST.get('password')
         role = request.POST.get('role')

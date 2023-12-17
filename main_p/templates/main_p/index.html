@@ -41,9 +41,7 @@
 				<button type="submit" name="button" value="want_order">查看所有徵求訂單</button>
 			</div>
 			<div>
-				<input type="button" value="查詢" onclick="location.href='{% url 'main_p:search' user_id=1%}'">
-				<input type="button" value="評價" onclick="location.href='{% url 'evaluate:evaluate_user' user_id=1 %}'">
-				<input type="button" value="查詢" onclick="location.href='{% url 'main_p:search'%}'">
+				<input type="button" value="查詢" onclick="location.href='{% url 'main_p:search' user_id=user_id %}'">
 				<input type="button" value="評價" onclick="location.href='{% url 'evaluate:evaluate_user' user_id=user_id %}'">
 			</div>
         </form>

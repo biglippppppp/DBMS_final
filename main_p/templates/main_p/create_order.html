@@ -14,7 +14,9 @@
         h1 {
             text-align: center;
         }
-
+        p {
+            text-align: center;
+        }
         form {
             max-width: 600px;
             margin: 0 auto;
@@ -59,14 +61,14 @@
 
 		.custom-button:hover {
 			background-color: #45a049;
-
+        }
     </style>
 </head>
 
 <body>
     <h1>新增訂單</h1>
-
-    <form method="post" action="{% url 'main_p:create_order' user_id=user_id %}" id="orderForm">
+    <p><a href="/main_p/{{user_id}}">回主頁</a></p>
+    <form method="post" id="orderForm">
 
         {% csrf_token %}
 
@@ -98,7 +100,7 @@
             <button type="button" onclick="addBook()">Add Book</button>
             <!--<button type="submit">Submit</button>-->
 			
-			<input type="button" value="Submit" class="custom-button" onclick="location.href='{% url 'self_info:posting' user_id=1%}'">
+			<button type="submit" name="button" value="submit">Submit</button>
         </div>
     </form>
 
