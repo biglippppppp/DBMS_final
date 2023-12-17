@@ -8,6 +8,7 @@ from main_p.models import Book
 from .forms import SaleOrderForm
 from .forms import BuyOrderForm
 from django.forms import formset_factory, BaseFormSet
+from django.http import HttpResponseServerError
 
 app_name = 'main_p'
 def index(request, user_id):
@@ -26,75 +27,61 @@ def index(request, user_id):
 def new_create_order(request, user_id):
     return render(request, 'main_p/new_create_order.html', {'user_id': user_id})
 
-SaleOrderFormset = formset_factory(SaleOrderForm, extra=1)
-
 def create_sale_order(request, user_id):
     if request.method == 'POST':
-        formset = SaleOrderFormset(request.POST)
+        isbn_input = request.POST.get('ISBN')
+        isbns = isbn_input.split('、') if isbn_input else []
+        price_input = request.POST.get('Price')
+        prices = price_input.split('、') if price_input else []
+        description_input = request.POST.get('Description')
+        descriptions = description_input.split('、') if description_input else []
+        
+        detail_require = 0
+        detail_isbn = []
+        for isbn in isbns:
+        # Check if the ISBN already exists in the database
+            book_exists = Book.objects.filter(isbn=isbn).exists()
+            if not book_exists:
+                detail_require += 1
+                detail_isbn.append(isbn)
+        if detail_require > 0:
+            # If there are ISBNs that require additional information, redirect to book_detail
+            return redirect('main_p:book_detail', user_id=user_id, isbns="、".join(detail_isbn))
+        # return redirect('main_p:book_detail', user_id=user_id, isbn=isbn)
 
-        if formset.is_valid():
-            for form in formset:
-                isbn = form.cleaned_data.get('isbn')
-                price = form.cleaned_data.get('price')
-                description = form.cleaned_data.get('description')
+        # If all forms are valid, you can redirect or perform other actions here
+        # return redirect('self_info:personal_order', user_id=user_id)
 
-                # Check if the ISBN already exists in the database
-                book_exists = Book.objects.filter(isbn=isbn).exists()
+    #else:
+        # formset = SaleOrderFormset()
 
-                if not book_exists:
-                    # Store formset management form in the session
-                    request.session['formset_management_form'] = formset.management_form.cleaned_data
-                    # ISBN doesn't exist, redirect to book_detail page
-                    return redirect('main_p:book_detail', user_id=user_id, isbn=isbn)
-
-                # Perform additional actions with the form data if needed
-                # For example, save the data to the database or process the order
-
-            # If all forms are valid, you can redirect or perform other actions here
-            return redirect('self_info:personal_order', user_id=user_id)  # Adjust this to your needs
-
-    else:
-        formset = SaleOrderFormset()
-
-    return render(request, 'main_p/create_saleOrder.html', {'user_id': user_id, 'formset': formset})
+    return render(request, 'main_p/create_saleOrder.html', {'user_id': user_id})
 
 
-BuyOrderFormset = formset_factory(BuyOrderForm, extra=1)
 def create_want_order(request, user_id):
-    # Your logic for creating want orders
     if request.method == 'POST':
-        formset = BuyOrderFormset(request.POST)
-
-        if formset.is_valid():
-            for form in formset:
-                isbn = form.cleaned_data.get('isbn')
-                description = form.cleaned_data.get('description')
-
-                # Check if the ISBN already exists in the database
-                #book_exists = Book.objects.filter(isbn=isbn).exists()
-                #if not book_exists:
-                    # Store formset management form in the session
-                    #request.session['formset_management_form'] = formset.management_form.cleaned_data
-                    # ISBN doesn't exist, redirect to book_detail page
-                return redirect('main_p:create_buyOrder', user_id=user_id)
-
-            return redirect('self_info:personal_order', user_id=user_id)
-    else:
-        formset = BuyOrderFormset()
-    return render(request, 'main_p/create_buyOrder.html', {'user_id': user_id, 'formset': formset})
+        isbn_input = request.POST.get('ISBN')
+        isbns = isbn_input.split('、') if isbn_input else []
+        description_input = request.POST.get('Description')
+        descriptions = description_input.split('、') if description_input else []
+        
+        detail_require = 0
+        detail_isbn = []
+        for isbn in isbns:
+        # Check if the ISBN already exists in the database
+            book_exists = Book.objects.filter(isbn=isbn).exists()
+            if not book_exists:
+                detail_require += 1
+                detail_isbn.append(isbn)
+        if detail_require > 0:
+            # If there are ISBNs that require additional information, redirect to book_detail
+            return redirect('main_p:book_detail', user_id=user_id, isbns="、".join(detail_isbn))
+    return render(request, 'main_p/create_buyOrder.html', {'user_id': user_id})
    
-def book_detail(request, user_id, isbn):
-    formset_management_form_data = request.session.pop('formset_management_form', None)
-
-    if formset_management_form_data is None:
-        return HttpResponseServerError("Formset management form data not found in the session.")
-
-    # Create a new formset with the retrieved management form data
-    formset = SaleOrderFormset(initial=formset_management_form_data)
-
-    # Your existing code for handling the book detail page goes here
-
-    return render(request, 'main_p/book_detail.html', {'user_id': user_id, 'isbn': isbn, 'formset': formset})
+def book_detail(request, user_id, isbns):
+    isbns_list = isbns.split('、') if isbns else []
+    # return redirect('self_info:personal_order', user_id=user_id)
+    return render(request, 'main_p/book_detail.html', {'user_id': user_id, 'isbns': isbns_list})
 
 
 def search(request, user_id):

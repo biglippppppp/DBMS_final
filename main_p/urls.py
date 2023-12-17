@@ -16,10 +16,9 @@ urlpatterns = [
     path('new_create_order/<int:user_id>/', new_create_order, name='new_create_order'),
     path('create_saleOrder/<int:user_id>/', views.create_sale_order, name='create_saleOrder'),
     path('create_buyOrder/<int:user_id>/', views.create_want_order, name='create_buyOrder'),
-   
     path('index/', views.self_info, name='self_info'),
     path('api/<int:user_id>/', MainPAPIView.as_view(), name='main-p-api'),
     path('api/search/', SearchAPIView.as_view(), name='search-api'),
     path('api/posts/<int:user_id>/', PostAPIView.as_view(), name='post-api'),
-    path('main_p:book_detail/<int:user_id>/<str:isbn>/', views.book_detail, name='book_detail'),
+    path('book_detail/<int:user_id>/<str:isbns>/', views.book_detail, name='book_detail'),
 ]
