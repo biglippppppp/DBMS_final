@@ -169,14 +169,19 @@ class SearchAPIView(APIView):
             correspond_isbns = [book_category.isbn.isbn for book_category in all_book_category]
             orders = self.get_books_for_order(correspond_isbns, order_type)
         else:
+            # Retrieve the list of ISBNs from BookCategory
+            isbn_list_from_category = BookCategory.objects.filter(
+                category=category
+            ).values_list('isbn__isbn', flat=True)
+
+            # Filter Book objects based on author, title, and ISBNs from BookCategory
             results = Book.objects.filter(
-                Q(author__icontains=key_word.lower()) | Q(title__icontains=key_word.lower())
+                Q(author__icontains=key_word.lower()) | Q(title__icontains=key_word.lower()),
+                isbn__in=isbn_list_from_category
             ).values_list('isbn', flat=True)
 
             # Convert the queryset to a list of ISBNs
             isbn_list = list(results)
-            print(isbn_list)
-
             orders = self.get_books_for_order(isbn_list, order_type)
         orders_serializer = OrderSerializer(orders, many=True)
         return Response({'orders': orders_serializer.data, 'user_id': user_id})
