@@ -9,6 +9,8 @@ from .forms import SaleOrderForm
 from .forms import BuyOrderForm
 from django.forms import formset_factory, BaseFormSet
 from django.http import HttpResponseServerError
+from django.utils.http import urlencode
+from django.db import transaction
 
 app_name = 'main_p'
 def index(request, user_id):
@@ -51,17 +53,19 @@ def create_sale_order(request, user_id):
             if not book_exists:
                 detail_require += 1
                 detail_isbn.append(isbn)
-        if detail_require > 0:
-            # If there are ISBNs that require additional information, redirect to book_detail
-            return redirect('main_p:book_detail', user_id=user_id, isbns="、".join(detail_isbn))
-        # return redirect('main_p:book_detail', user_id=user_id, isbn=isbn)
+        query_params = urlencode({
+            'all_isbns': "、".join(isbns),
+            'prices': "、".join(prices),
+            'descriptions': "、".join(descriptions),
+            'type': 'sell',
+        })
 
-        # If all forms are valid, you can redirect or perform other actions here
-        # return redirect('self_info:personal_order', user_id=user_id)
 
-    #else:
-        # formset = SaleOrderFormset()
+        # Build the redirect URL with only 'user_id' and 'isbns' as path parameters
+        redirect_url = f'/main_p/book_detail/{user_id}/{"、".join(detail_isbn)}/?{query_params}'
 
+        # Redirect to the constructed URL
+        return redirect(redirect_url)
     return render(request, 'main_p/create_saleOrder.html', {'user_id': user_id})
 
 
@@ -75,20 +79,81 @@ def create_want_order(request, user_id):
         detail_require = 0
         detail_isbn = []
         for isbn in isbns:
-        # Check if the ISBN already exists in the database
+            # Check if the ISBN already exists in the database
             book_exists = Book.objects.filter(isbn=isbn).exists()
             if not book_exists:
                 detail_require += 1
                 detail_isbn.append(isbn)
-        if detail_require > 0:
-            # If there are ISBNs that require additional information, redirect to book_detail
-            return redirect('main_p:book_detail', user_id=user_id, isbns="、".join(detail_isbn))
+        query_params = urlencode({
+            'all_isbns': "、".join(isbns),
+            'descriptions': "、".join(descriptions),
+            'type': 'want',
+        })
+
+        # Build the redirect URL with only 'user_id' and 'isbns' as path parameters
+        redirect_url = f'/main_p/book_detail/{user_id}/{"、".join(detail_isbn)}/?{query_params}'
+
+        # Redirect to the constructed URL
+        return redirect(redirect_url)
     return render(request, 'main_p/create_buyOrder.html', {'user_id': user_id})
 
 def book_detail(request, user_id, isbns):
-    isbns_list = isbns.split('、') if isbns else []
-    # return redirect('self_info:personal_order', user_id=user_id)
-    return render(request, 'main_p/book_detail.html', {'user_id': user_id, 'isbns': isbns_list})
+    with transaction.atomic():
+        api_url = f'http://localhost:8000/main_p/api/posts/{user_id}/'
+        isbns_list = isbns.split('、') if isbns else []
+        isbns = request.GET.get('all_isbns').split('、') if request.GET.get('isbns') else []
+        prices = request.GET.get('prices').split('、') if request.GET.get('prices') else []
+        descriptions = request.GET.get('descriptions').split('、') if request.GET.get('descriptions') else []
+        type = request.GET.get('type')
+        data = {
+            'isbns': isbns,
+            'prices': prices,
+            'descriptions': descriptions,
+            'order_type': type
+        }
+
+        if isbns_list == []:
+            response = requests.get(api_url, json=data)
+            api_response = response.json()
+            order_id = api_response.get('order_id')
+            if type == 'sell':
+                return redirect('self_info:posting_sell_detail', user_id=user_id, order_id=order_id)
+            else:
+                return redirect('self_info:posting_want_detail', user_id=user_id, order_id=order_id)
+        else:
+            if request.method == 'POST':
+                for isbn in request.POST.getlist('ISBN'):
+                    # Retrieve data for each ISBN
+                    book_title = request.POST.get(f'bookTitle_{isbn}')
+                    author = request.POST.get(f'author_{isbn}')
+                    category = request.POST.get(f'category_{isbn}')
+                    course_id = request.POST.get(f'courseID_{isbn}')
+                    academic_year = request.POST.get(f'academicYear_{isbn}')
+                    course_name = request.POST.get(f'courseName_{isbn}')
+                    instructor_name = request.POST.get(f'instructorName_{isbn}')
+
+                    # Create a dictionary with form data for each ISBN
+                    form_data = {
+                        'ISBN': isbn,
+                        'bookTitle': book_title,
+                        'author': author,
+                        'category': category,
+                        'courseID': course_id,
+                        'academic_year': academic_year,
+                        'course_name': course_name,
+                        'instructor_name': instructor_name,
+                    }
+
+                    response = requests.post(api_url, json=form_data)
+                    api_response = response.json()
+                response = requests.get(api_url, json=data)
+                api_response = response.json()
+                order_id = api_response.get('order_id')
+                if type == 'sell':
+                    return redirect('self_info:posting_sell_detail', user_id=user_id, order_id=order_id)
+                else:
+                    return redirect('self_info:posting_want_detail', user_id=user_id, order_id=order_id)
+        return render(request, 'main_p/book_detail.html', {'user_id': user_id, 'isbns': isbns_list})
 
 
 def search(request, user_id):

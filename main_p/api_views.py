@@ -22,6 +22,11 @@ from django.core.paginator import Paginator
 from evaluate.api_views import UsersSerializer
 from django.db.models import Q
 from django.db import transaction
+from .models import Course
+from .models import Require
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class MainPAPIView(APIView):
@@ -34,64 +39,60 @@ class MainPAPIView(APIView):
 
 
 class PostAPIView(APIView):
+    def get(self, request, user_id, *args, **kwargs):
+        user = Users.objects.get(userid=user_id)
+        order_type = request.data.get('order_type')
+        isbns = request.data.get('isbns', [])
+        prices = request.data.get('prices', [])
+        descriptions = request.data.get('descriptions', [])
+        current_datetime = timezone.now()
+        current_date = current_datetime.date()
+
+        if order_type == 'sell':
+            order_id = SaleOrder.objects.count() + 1
+            sale_order = SaleOrder.objects.create(orderid=order_id, userid=user, postdate=current_date)
+
+            for i in range(len(isbns)):
+                isbn = isbns[i]
+                price = prices[i]
+                description = descriptions[i]
+                status = 'Posting'
+                book = Book.objects.get(isbn=isbn)
+                Sell.objects.create(orderid=sale_order, isbn=book, price=price, status=status, description=description, finishdate=None)
+
+
+
+        else:
+            order_id = WantOrder.objects.count() + 1
+            want_order = WantOrder.objects.create(orderid=order_id, userid=user, postdate=current_date)
+
+            for i in range(len(isbns)):
+                isbn = isbns[i]
+                price = prices[i]
+                description = descriptions[i]
+                status = 'Posting'
+                book = Book.objects.get(isbn=isbn)
+                LookFor.objects.create(orderid=want_order, isbn=book, status=status, description=description, finishdate=None)
+        return Response({'user_id': user_id, 'order_id': order_id})
+
     def post(self, request, user_id, *args, **kwargs):
-        with transaction.atomic():
-            user = Users.objects.get(userid=user_id)
-            order_type = request.data.get('order_type')
-
-            if order_type == 'sell':
-                book_counter = 1
-                order_id = SaleOrder.objects.count() + 1
-                current_datetime = timezone.now()
-                current_date = current_datetime.date()
-                sale_order = SaleOrder.objects.create(orderid=order_id, userid=user, postdate=current_date)
-
-                while True:
-                    isbn_key = f'isbn_{book_counter}'
-                    price_key = f'price_{book_counter}'
-                    description_key = f'description_{book_counter}'
-
-                    isbn = request.data.get(isbn_key)
-                    price = request.data.get(price_key)
-                    description = request.data.get(description_key)
-                    status = 'Posting'
-
-                    if isbn is None:
-                        # No more books, break out of the loop
-                        break
-
-
-                    book = Book.objects.get(isbn=isbn)
-                    Sell.objects.create(orderid=sale_order, isbn=book, price=price, status=status, description=description, finishdate=None)
-                    book_counter += 1
-
-
-
-            else:
-                book_counter = 1
-                order_id = WantOrder.objects.count() + 1
-                current_datetime = timezone.now()
-                current_date = current_datetime.date()
-                want_order = WantOrder.objects.create(orderid=order_id, userid=user, postdate=current_date)
-
-                while True:
-                    isbn_key = f'isbn_{book_counter}'
-                    description_key = f'description_{book_counter}'
-
-                    isbn = request.data.get(isbn_key)
-                    description = request.data.get(description_key)
-                    status = 'Posting'
-
-                    if isbn is None:
-                        # No more books, break out of the loop
-                        break
-
-                    book = Book.objects.get(isbn=isbn)
-
-                    LookFor.objects.create(orderid=want_order, isbn=book, status=status, description=description, finishdate=None)
-                    book_counter += 1
-            return Response({'user_id': user_id, 'order_id': order_id})
-
+        try:
+            isbn = request.data.get('ISBN')
+            book_title = request.data.get('bookTitle')
+            author = request.data.get('author')
+            category = request.data.get('category')
+            course_id = request.data.get('courseID')
+            academic_year = request.data.get('academic_year')
+            course_name = request.data.get('course_name')
+            instructor_name = request.data.get('instructor_name')
+            book = Book.objects.create(isbn=isbn, title=book_title, author=author)
+            BookCategory.objects.create(isbn=book, category=category)
+            course = Course.objects.create(courseid=course_id, academicyear=academic_year, coursename=course_name, instructorname=instructor_name)
+            Require.objects.create(isbn=book, courseid=course, academicyear=academic_year)
+        except Exception as e:
+            # Log the exception
+            logger.exception("An error occurred in your_view: %s", str(e))
+        return Response({'status': 'success'})
 
 
 class SearchAPIView(APIView):
@@ -169,11 +170,12 @@ class SearchAPIView(APIView):
             orders = self.get_books_for_order(correspond_isbns, order_type)
         else:
             results = Book.objects.filter(
-                Q(author__icontains=key_word) | Q(title__icontains=key_word)
+                Q(author__icontains=key_word.lower()) | Q(title__icontains=key_word.lower())
             ).values_list('isbn', flat=True)
 
             # Convert the queryset to a list of ISBNs
             isbn_list = list(results)
+            print(isbn_list)
 
             orders = self.get_books_for_order(isbn_list, order_type)
         orders_serializer = OrderSerializer(orders, many=True)

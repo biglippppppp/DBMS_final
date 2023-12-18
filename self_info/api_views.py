@@ -20,6 +20,7 @@ from .models import User
 from rest_framework import serializers
 from django.db import transaction
 from django.utils import timezone
+from evaluate.api_views import UsersSerializer
 
 
 
@@ -211,6 +212,14 @@ class PostingAPIView(APIView):
 
 class FinishSellAPIView(APIView):
     def get(self, request, user_id, order_id, *args, **kwargs):
+        receiver_ids = []
+        users = []
+        receive_sales = ReceiveSale.objects.filter(orderid=order_id)
+        for receive_sale in receive_sales:
+            receiver_ids.append(receive_sale.userid.userid)
+        for id in receiver_ids:
+            users.append(Users.objects.get(userid=id))
+        user_serializer = UsersSerializer(users, many=True)
         books_details = []
         sells = Sell.objects.filter(orderid=order_id)
         for sell in sells:
@@ -260,10 +269,18 @@ class FinishSellAPIView(APIView):
         # Serialize the data
         serialized_data = serializer.data
 
-        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id})
+        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id, 'receivers': user_serializer.data})
 
 class FinishWantAPIView(APIView):
     def get(self, request, user_id, order_id, *args, **kwargs):
+        receiver_ids = []
+        users = []
+        receive_sales = ReceiveWant.objects.filter(orderid=order_id)
+        for receive_sale in receive_sales:
+            receiver_ids.append(receive_sale.userid.userid)
+        for id in receiver_ids:
+            users.append(Users.objects.get(userid=id))
+        user_serializer = UsersSerializer(users, many=True)
         books_details = []
         sells = LookFor.objects.filter(orderid=order_id)
         for sell in sells:
@@ -311,11 +328,19 @@ class FinishWantAPIView(APIView):
         # Serialize the data
         serialized_data = serializer.data
 
-        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id})
+        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id, 'receivers': user_serializer.data})
 
 
 class PostingSellAPIView(APIView):
     def get(self, request, user_id, order_id, *args, **kwargs):
+        receiver_ids = []
+        users = []
+        receive_sales = ReceiveSale.objects.filter(orderid=order_id)
+        for receive_sale in receive_sales:
+            receiver_ids.append(receive_sale.userid.userid)
+        for id in receiver_ids:
+            users.append(Users.objects.get(userid=id))
+        user_serializer = UsersSerializer(users, many=True)
         books_details = []
         sells = Sell.objects.filter(orderid=order_id)
         for sell in sells:
@@ -359,10 +384,18 @@ class PostingSellAPIView(APIView):
         # Serialize the data
         serialized_data = serializer.data
 
-        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id})
+        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id, 'receivers': user_serializer.data})
 
 class PostingWantAPIView(APIView):
     def get(self, request, user_id, order_id, *args, **kwargs):
+        receiver_ids = []
+        users = []
+        receive_sales = ReceiveWant.objects.filter(orderid=order_id)
+        for receive_sale in receive_sales:
+            receiver_ids.append(receive_sale.userid.userid)
+        for id in receiver_ids:
+            users.append(Users.objects.get(userid=id))
+        user_serializer = UsersSerializer(users, many=True)
         books_details = []
         sells = LookFor.objects.filter(orderid=order_id)
         for sell in sells:
@@ -404,7 +437,7 @@ class PostingWantAPIView(APIView):
         # Serialize the data
         serialized_data = serializer.data
 
-        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id})
+        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id, 'receivers': user_serializer.data})
 
 class ReceiveAPIView(APIView):
     def get(self, request, user_id, *args, **kwargs):

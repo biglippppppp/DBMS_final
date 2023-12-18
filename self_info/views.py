@@ -57,19 +57,23 @@ def finish_sell_detail(request, order_id, user_id):
     api_response = requests.get(api_url)
     api_response = api_response.json()
     books = api_response.get('books')
+    receivers = api_response.get('receivers')
     
     if request.method == 'POST':
         for key, value in request.POST.items():
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/finish_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/finish_sell_detail.html', {'books': books,'user_id': user_id,
+                                                                        'order_id': order_id, 'receivers': receivers})
 
 def posting_sell_detail(request, order_id, user_id):
     api_url = f'http://localhost:8000/self_info/api/posting_sell_detail/{user_id}/{order_id}'
     api_response = requests.get(api_url)
     api_response = api_response.json()
     books = api_response.get('books')
+    receivers = api_response.get('receivers')
+
     if request.method == 'POST':
         # 檢查每個按鈕
         for key, value in request.POST.items():
@@ -92,13 +96,14 @@ def posting_sell_detail(request, order_id, user_id):
                     url = f'http://localhost:8000/self_info/api/renew'
                     response = requests.post(url, json=data)
 
-    return render(request, 'self_info/detail/posting_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/posting_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id, 'receivers': receivers})
 
 def received_sell_detail(request, order_id, user_id):
     api_url = f'http://localhost:8000/self_info/api/receive_sell_detail/{user_id}/{order_id}'
     api_response = requests.get(api_url)
     api_response = api_response.json()
     books = api_response.get('books')
+
     if request.method == 'POST':
         for key, value in request.POST.items():
                 if value == 'evaluate':
@@ -111,19 +116,22 @@ def finish_want_detail(request, order_id, user_id):
     api_response = requests.get(api_url)
     api_response = api_response.json()
     books = api_response.get('books')
+    receivers = api_response.get('receivers')
+
 
     if request.method == 'POST':
         for key, value in request.POST.items():
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/finish_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/finish_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id, 'receivers': receivers})
 
 def posting_want_detail(request, order_id, user_id):
     api_url = f'http://localhost:8000/self_info/api/posting_want_detail/{user_id}/{order_id}'
     api_response = requests.get(api_url)
     api_response = api_response.json()
     books = api_response.get('books')
+    receivers = api_response.get('receivers')
     if request.method == 'POST':
         # 檢查每個按鈕
         for key, value in request.POST.items():
@@ -146,7 +154,7 @@ def posting_want_detail(request, order_id, user_id):
                     url = f'http://localhost:8000/self_info/api/renew'
                     response = requests.post(url, json=data)
 
-    return render(request, 'self_info/detail/posting_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/posting_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id, 'receivers': receivers})
 
 def received_want_detail(request, order_id, user_id):
     api_url = f'http://localhost:8000/self_info/api/receive_want_detail/{user_id}/{order_id}'
@@ -159,7 +167,7 @@ def received_want_detail(request, order_id, user_id):
                     print(key)
                     evaluated_user_id = int(key.split('_')[1])
                     return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
-    return render(request, 'self_info/detail/received_want_detail.html', {'books': books1,'user_id': user_id, 'order_id': order_id})
+    return render(request, 'self_info/detail/received_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
     
 def evaluate_detail(request, user_id):
     # Your view logic here

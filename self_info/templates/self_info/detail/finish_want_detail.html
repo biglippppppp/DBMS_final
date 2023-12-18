@@ -37,8 +37,8 @@
             <h2>接受訂單者</h2>
             <ul>
                 {% for receiver in receivers %}
-                    <li>{{ receiver.user_name }}</li>
-                    <button type="submit" name="button_{{receiver.user_id}}" value="evaluate">查看評價</button>
+                    <li>{{ receiver.username }}</li>
+                    <button type="submit" name="button_{{receiver.userid}}" value="evaluate">查看評價</button>
                 {% endfor %}
             </ul>
         </div>
