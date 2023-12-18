@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>書籍詳細資訊</title>
+    <style>
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 10px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        label {
+            grid-column: span 2;
+        }
+
+        button {
+            width=70px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>填寫書籍詳細資訊</h2>
+{% for isbn in isbns %}
+	<form action="{% url 'main_p:create_saleOrder' user_id=user_id %}" method="post">
+		{% csrf_token %}
+		
+		<input type="hidden" name="ISBN" value="{{ isbn }}">
+		
+		<label for="ISBN">ISBN：{{ isbn }}</label>
+		<label for="bookTitle">書名</label>
+		<input type="text" id="bookTitle" name="bookTitle" required><br>
+
+		<label for="author">作者</label>
+		<input type="text" id="author" name="author" required><br>
+
+		<label for="category">類別</label>
+		<select id="category" name="category" required>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+		</select><br>
+
+		<label for="courseID">台大課程流水號</label>
+		<input type="text" id="courseID" name="courseID" required><br>
+
+		<label for="academicYear">開課學年度</label>
+		<input type="text" id="academicYear" name="academicYear" required><br>
+
+		<label for="courseName">課程名稱</label>
+		<input type="text" id="courseName" name="courseName" required><br>
+
+		<label for="instructorName">教師名稱</label>
+		<input type="text" id="instructorName" name="instructorName" required><br>
+		
+		<label for="line">======================</label>
+	</form>
+{% endfor %}
+<button type="button" onclick="location.href='{% url 'self_info:personal_order' user_id=user_id%}'">提交</button>
+
+</body>
+</html>

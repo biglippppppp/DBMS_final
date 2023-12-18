@@ -1,0 +1,51 @@
+<!-- create_saleOrder.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Sale Order</title>
+</head>
+<style>
+    label {
+        display: inline-block;
+        width: 100px; /* Adjust the width as needed */
+        margin-bottom: 5px; /* Add margin to create space below each label */
+    }
+
+    textarea {
+        vertical-align: top;
+        margin-bottom: 10px; /* Add margin to create space below each textarea */
+    }
+
+    button {
+        margin-top: 10px; /* Add margin to create space above the button */
+    }
+</style>
+
+<body>
+
+    <h2>新增販賣訂單</h2>
+	<h3>若要新增多本書籍，ISBN 和 Price 請用全形頓號(、)隔開</h3>
+	<form action="{% url 'main_p:create_saleOrder' user_id=user_id %}" method="post">
+	 {% csrf_token %}
+	<div>
+		<label for="ISBN">ISBN</label>
+        <textarea name="ISBN" id="ISBN" rows="1"></textarea>
+	</div>
+	<div>
+		<label for="Price">Price</label>
+        <textarea name="Price" id="Price" rows="1"></textarea>
+	</div>
+	<div>	
+		<label for="Description">Description</label>
+        <textarea name="Description" id="Description" rows="4"></textarea>
+	</div>
+	<div>	
+		<button type="submit">提交</button>
+    </div>
+	</form>
+
+</body>
+</html>

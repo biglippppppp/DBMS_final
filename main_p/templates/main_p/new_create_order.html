@@ -1,0 +1,77 @@
+<!-- create_order.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Order</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+		
+		.custom-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+		width: 70px;
+		}
+
+		.custom-button:hover {
+			background-color: #45a049;
+
+    </style>
+</head>
+
+<body>
+
+    <h2>新增訂單</h2>
+
+    <form method="post" action="{% url 'main_p:new_create_order' user_id=user_id%}" id="orderForm">
+	
+	<input type="button" value="販賣" class="custom-button" onclick="location.href='{% url 'main_p:create_saleOrder' user_id=user_id%}'">
+	
+	<input type="button" value="徵求" class="custom-button" onclick="location.href='{% url 'main_p:create_buyOrder' user_id=user_id%}'">
+	
+</body>
+</html>

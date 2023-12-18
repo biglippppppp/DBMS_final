@@ -5,43 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fd0ff97a-c37d-45bc-b9b5-07d1d7002df0" name="Changes" comment="test">
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main_p/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main_p/templates/main_p/book_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main_p/templates/main_p/create_buyOrder.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main_p/templates/main_p/create_saleOrder.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main_p/templates/main_p/new_create_order.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluate/templates/evaluate/evaluate_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/evaluate/templates/evaluate/evaluate_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluate/templates/evaluate/evaluate_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/evaluate/templates/evaluate/evaluate_user.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluate/templates/evaluate/evaluate_write.html" beforeDir="false" afterPath="$PROJECT_DIR$/evaluate/templates/evaluate/evaluate_write.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluate/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/evaluate/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/login/templates/login/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/login/templates/login/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/login/templates/login/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/login/templates/login/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_p/templates/main_p/create_order.html" beforeDir="false" afterPath="$PROJECT_DIR$/main_p/templates/main_p/create_order.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_p/templates/main_p/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/main_p/templates/main_p/search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order/templates/order/detail/sale_order_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/order/templates/order/detail/sale_order_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order/templates/order/detail/want_order_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/order/templates/order/detail/want_order_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order/templates/order/receive.html" beforeDir="false" afterPath="$PROJECT_DIR$/order/templates/order/receive.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_p/templates/main_p/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/main_p/templates/main_p/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_p/templates/main_p/search_result.html" beforeDir="false" afterPath="$PROJECT_DIR$/main_p/templates/main_p/search_result.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_p/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_p/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main_p/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_p/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order/templates/order/sale_order.html" beforeDir="false" afterPath="$PROJECT_DIR$/order/templates/order/sale_order.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order/templates/order/want_order.html" beforeDir="false" afterPath="$PROJECT_DIR$/order/templates/order/want_order.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/order/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/detail/finish_sell_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/detail/finish_sell_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/detail/finish_want_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/detail/finish_want_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/detail/posting_sell_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/detail/posting_sell_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/detail/posting_want_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/detail/posting_want_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/detail/received_sell_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/detail/received_sell_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/detail/received_want_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/detail/received_want_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/finish.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/finish.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/personal_order.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/personal_order.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/posting.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/posting.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/received.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/received.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/self_info/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="origin/pslee" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="97fdb36470cee3388941cf7c447a829da2cf1e89" />
+        <entry key="$PROJECT_DIR$" value="c200dd95704c325541bf870fae23dc113453359b" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -111,7 +101,7 @@
       <option name="presentableId" value="Default" />
       <updated>1702628463334</updated>
       <workItem from="1702628465202" duration="11022000" />
-      <workItem from="1702654917908" duration="25629000" />
+      <workItem from="1702654917908" duration="28118000" />
     </task>
     <task id="LOCAL-00001" summary="1215 16:55">
       <option name="closed" value="true" />

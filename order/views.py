@@ -3,8 +3,6 @@ import requests
 from main_p.models import SaleOrder
 from main_p.models import WantOrder
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from itertools import chain
-
 
 class FakeUser:
         def __init__(self, user_id, user_name, role='user',email="p@gmail.com"):
@@ -54,37 +52,49 @@ def want_order(request, user_id):
     api_response = api_response.json()
     orders = api_response.get('orders')
 
-    return render(request, 'order/want_order.html', {'orders':orders,'user_id': user_id})
+    # 分頁
+    items_per_page = 20
+    paginator = Paginator(orders, items_per_page)
+    page = request.GET.get('page')
+
+    try:
+        orders_page = paginator.page(page)
+    except PageNotAnInteger:
+        orders_page = paginator.page(1)
+    except EmptyPage:
+        orders_page = paginator.page(paginator.num_pages)
+
+    return render(request, 'order/want_order.html', {'orders':orders_page,'user_id': user_id})
 
 def sale_order(request, user_id):
-    # Get the page parameter from the request
-    page = request.GET.get('page', 1)
-    # Call the API with the page parameter
-    api_url = f'http://localhost:8000/order/api/sale_order/{user_id}/{page}'
+
+    api_url = f'http://localhost:8000/order/api/sale_order/{user_id}'
     api_response = requests.get(api_url)
-    api_data = api_response.json()
+    api_response = api_response.json()
+    orders = api_response.get('orders')
 
-    # Get the orders from the API response
-    orders = api_data.get('orders', [])
-    nested_page_range = api_data.get('page_range')
+    # 分頁
+    items_per_page = 20
+    paginator = Paginator(orders, items_per_page)
+    page = request.GET.get('page')
 
-    # Flatten the nested lists
-    page_range = list(chain.from_iterable(nested_page_range))
-
-    # Paginate the API response directly
-    paginator = Paginator(orders, 20)  # Assuming 20 items per page
     try:
-        orders = paginator.page(page)
+        orders_page = paginator.page(page)
     except PageNotAnInteger:
-        orders = paginator.page(1)
+        orders_page = paginator.page(1)
     except EmptyPage:
-        orders = paginator.page(paginator.num_pages)
+        orders_page = paginator.page(paginator.num_pages)
 
-    return render(request, 'order/sale_order.html', {'orders': orders, 'user_id': user_id, 'page_range': page_range})
+
+    return render(request, 'order/sale_order.html', {'orders':orders_page,'user_id': user_id})
+
 def want_order_detail(request, user_id, order_id):
-    user1 = FakeUser(3, 'Jerry3')
-    books1 = [FakeBook_detail("ISBN1", "100", "Description 1",poster=user1,status='finished'), FakeBook_detail("ISBN2", "150", "Description 2",poster=user1,status='posting')]
-    poster_id = books1[0].poster.user_id
+    api_url = f'http://localhost:8000/order/api/sale_order_detail/{user_id}/{order_id}'
+    api_response = requests.get(api_url)
+    api_response = api_response.json()
+    books = api_response.get('books')
+    poster_id = WantOrder.objects.get(orderid=order_id).userid
+
     if request.method == 'POST':
         for key, value in request.POST.items():
                 if value == 'receive':
