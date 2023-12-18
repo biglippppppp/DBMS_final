@@ -14,7 +14,9 @@
         h1 {
             text-align: center;
         }
-
+        p {
+            text-align: center;
+        }
         form {
             max-width: 600px;
             margin: 0 auto;
@@ -51,7 +53,7 @@
 <body>
 
 <h1>查詢訂單</h1>
-
+<p><a href="/main_p/{{user_id}}">回主頁</a></p>
 <form method="post" action="{% url 'main_p:search' user_id=user_id %}">
     {% csrf_token %}
 

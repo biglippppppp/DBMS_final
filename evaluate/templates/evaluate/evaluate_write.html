@@ -8,6 +8,7 @@
 </head>
 <body>
     <h1>填寫{{ target_user.username }}的評論 </h1>
+        <p><a href="/main_p/{{user_id}}">回主頁</a></p>
 	<form action="{% url 'evaluate:write_review' user_id=user_id target_id=target_user.userid%}" method="post">
         {% csrf_token %}<!--Django 的模板標籤-->
         <label for="score">評分：</label>

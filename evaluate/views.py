@@ -2,14 +2,6 @@ from django.shortcuts import render,redirect
 import requests
 from main_p.models import Users
 
-class FakeEvaluate:
-        def __init__(self, evaluatorUserID, evaluatedUserID, ranking, rankingDate, comment, avg_score):
-            self.evaluatorUserID = evaluatorUserID
-            self.evaluatedUserID = evaluatedUserID
-            self.ranking = ranking
-            self.rankingDate = rankingDate
-            self.comment = comment
-            self.avg_score = avg_score
 
 app_name = 'evaluate'
 
@@ -24,11 +16,6 @@ def evaluate_detail(request, user_id):
     return render(request, 'evaluate/evaluate_detail.html',
                   {'user_id': user_id, 'avg_score': avg_score, 'evaluates': evaluates})
 
-
-"""  
-def evaluate_user(request):
-    return render(request, 'evaluate/evaluate_user.html')
-"""  
 def evaluate_user(request, user_id):
     api_url = f'http://localhost:8000/evaluate/api/evaluate/{user_id}'
     api_response = requests.get(api_url)
@@ -37,7 +24,7 @@ def evaluate_user(request, user_id):
     given_sellers = api_response.get('given_sellers')
     return render(request, 'evaluate/evaluate_user.html', {'user_id': user_id,
                                                            'received_buyers': received_buyers, 'given_sellers': given_sellers})
-    
+
 
 def write_review(request, user_id, target_id):
     target_user = Users.objects.get(userid= target_id)
