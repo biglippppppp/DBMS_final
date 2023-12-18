@@ -74,6 +74,7 @@ class UserSerializer(serializers.Serializer):
         return User(**validated_data)
 class SaleOrderAPIView(APIView):
     def get(self, request, user_id, page, *args, **kwargs):
+
         # Get all sale orders
         all_sale_orders = SaleOrder.objects.all()
 
