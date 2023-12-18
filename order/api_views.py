@@ -23,6 +23,8 @@ from self_info.models import User
 from evaluate.api_views import UsersSerializer
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
+from django.http import Http404
+
 
 
 
@@ -60,70 +62,89 @@ class SaleOrderAPIView(APIView):
 
         # Paginate the sale orders
         paginator = Paginator(all_sale_orders, self.get_items_per_page())
-        paginator_valuable = paginator.page(page)
-        page_range  =  list(paginator_valuable.paginator.page_range),
-
-        # Get the requested page from the query parameters
-
         try:
-            # Get the sale orders for the specified page
             sale_orders = paginator.page(page)
-        except PageNotAnInteger:
-            # If the page parameter is not an integer, return the first page
-            sale_orders = paginator.page(1)
-        except EmptyPage:
-            # If the page is out of range, return the last page
-            sale_orders = paginator.page(paginator.num_pages)
+        except (PageNotAnInteger, EmptyPage):
+            raise Http404("Invalid page number")
 
         sale_orders_list = []
 
         # Iterate through the sale orders
         for sale_order in sale_orders:
-            books = []
-            sells = Sell.objects.filter(orderid=sale_order.orderid)
-            for sell in sells:
-                isbn = sell.isbn.isbn
-                price = sell.price
-                book = Book.objects.get(isbn=isbn)
-                title = book.title
-                new_book = BookSimpleSerializer({'isbn': isbn, 'price': price, 'title': title}).data
-                books.append(new_book)
-
+            books = self.get_books_for_sale_order(sale_order)
             if books:
-                fake_order = OrderSerializer({'order_id': sale_order.orderid, 'user_id': user_id, 'books': books}).data
+                fake_order = self.get_fake_order_serializer(sale_order, user_id, books).data
                 sale_orders_list.append(fake_order)
 
         # Serialize the sale orders
         sale_orders_serializer = OrderSerializer(sale_orders_list, many=True)
 
-        return Response({
-            'orders': sale_orders_serializer.data,
-            'page_range':page_range
-        })
+        return Response({'orders': sale_orders_serializer.data})
 
     def get_items_per_page(self):
-        # Define the number of items to display per page
+        # Implement your logic for determining items per page
         return 20
-class WantOrderAPIView(APIView):
-    def get(self, request, user_id, *args, **kwargs):
-        sale_orders_list = []
-        for i in range(1, 101):
-            books = []
-            sells = LookFor.objects.filter(orderid=i)
-            for sell in sells:
-                isbn = sell.isbn.isbn
-                book = Book.objects.get(isbn=isbn)
-                title = book.title
-                new_book = Book_simple(isbn, None, title)
-                books.append(new_book)
-            if books != []:
-                fakeorder = Order(i, user_id, books)
-                sale_orders_list.append(fakeorder)
 
+    def get_books_for_sale_order(self, sale_order):
+        books = []
+        sells = Sell.objects.filter(orderid=sale_order.orderid)
+        for sell in sells:
+            isbn = sell.isbn.isbn
+            price = sell.price
+            book = Book.objects.get(isbn=isbn)
+            title = book.title
+            new_book = BookSimpleSerializer({'isbn': isbn, 'price': price, 'title': title}).data
+            books.append(new_book)
+        return books
+
+    def get_fake_order_serializer(self, sale_order, user_id, books):
+        return OrderSerializer({'order_id': sale_order.orderid, 'user_id': user_id, 'books': books})
+
+class WantOrderAPIView(APIView):
+    def get(self, request, user_id, page, *args, **kwargs):
+        # Get all sale orders
+        all_sale_orders = WantOrder.objects.all()
+
+        # Paginate the sale orders
+        paginator = Paginator(all_sale_orders, self.get_items_per_page())
+        try:
+            sale_orders = paginator.page(page)
+        except (PageNotAnInteger, EmptyPage):
+            raise Http404("Invalid page number")
+
+        sale_orders_list = []
+
+        # Iterate through the sale orders
+        for sale_order in sale_orders:
+            books = self.get_books_for_sale_order(sale_order)
+            if books:
+                fake_order = self.get_fake_order_serializer(sale_order, user_id, books).data
+                sale_orders_list.append(fake_order)
+
+        # Serialize the sale orders
         sale_orders_serializer = OrderSerializer(sale_orders_list, many=True)
-        return Response({
-            'orders': sale_orders_serializer.data,
-        })
+
+        return Response({'orders': sale_orders_serializer.data})
+
+    def get_items_per_page(self):
+        # Implement your logic for determining items per page
+        return 20
+
+    def get_books_for_sale_order(self, sale_order):
+        books = []
+        sells = LookFor.objects.filter(orderid=sale_order.orderid)
+        for sell in sells:
+            isbn = sell.isbn.isbn
+            price = None
+            book = Book.objects.get(isbn=isbn)
+            title = book.title
+            new_book = BookSimpleSerializer({'isbn': isbn, 'price': price, 'title': title}).data
+            books.append(new_book)
+        return books
+
+    def get_fake_order_serializer(self, sale_order, user_id, books):
+        return OrderSerializer({'order_id': sale_order.orderid, 'user_id': user_id, 'books': books})
+
 
 class SaleOrderDetailAPIView(APIView):
     def get(self, request, user_id, order_id, *args, **kwargs):

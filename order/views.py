@@ -3,93 +3,94 @@ import requests
 from main_p.models import SaleOrder
 from main_p.models import WantOrder
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-class FakeUser:
-        def __init__(self, user_id, user_name, role='user',email="p@gmail.com"):
-            self.user_id = user_id
-            self.user_name = user_name
-            self.role = role
-            self.email = email
-class FakeBook:
-        def __init__(self, isbn, price, description, receiver, status):
-            self.isbn = isbn
-            self.price = price
-            self.description = description
-            self.status = status
-            self.receiver = receiver
-            self.title = '假書名'
-            self.author = '假作者'
-class FakeOrder:
-        def __init__(self, order_id, user_id, books):
-            self.order_id = order_id
-            self.user_id = user_id
-            self.books = books
-class FakeBook_detail:
-        def __init__(self, isbn, price, description, poster, status):
-            self.isbn = isbn
-            self.price = price
-            self.description = description
-            self.poster = poster
-            self.status = status
-            self.title = '假書名'
-            self.author = '假作者'
-            self.category = ['理學院', "文學院"]
-            self.courseID = '123456'
-            self.academic_year = '112-1'
-            self.courseName = '資料庫'
-            self.teacherName = '孔子'
-
-
-
+from django.http import Http404
+from django.urls import reverse
+from django.http import HttpResponseNotAllowed
 
 
 def index(request):
     return render(request, 'order/index.html')
 
+
 def want_order(request, user_id):
-    api_url = f'http://localhost:8000/order/api/want_order/{user_id}'
-    api_response = requests.get(api_url)
-    api_response = api_response.json()
-    orders = api_response.get('orders')
+    if request.method == 'GET':
+        # Get the first page initially
+        page = 1
+        api_url = f'http://localhost:8000/order/api/want_order/{user_id}/{page}'
 
-    # 分頁
-    items_per_page = 20
-    paginator = Paginator(orders, items_per_page)
-    page = request.GET.get('page')
+        # Initialize an empty list to store orders
+        all_orders = []
 
-    try:
-        orders_page = paginator.page(page)
-    except PageNotAnInteger:
-        orders_page = paginator.page(1)
-    except EmptyPage:
-        orders_page = paginator.page(paginator.num_pages)
+        while page < 50:
+            # Make the API request
+            api_response = requests.get(api_url)
+            api_data = api_response.json()
+            orders = api_data.get('orders')
 
-    return render(request, 'order/want_order.html', {'orders':orders_page,'user_id': user_id})
+            # Append the orders to the list
+            all_orders.extend(orders)
+
+            # Increment the page number for the next request
+            page += 1
+            api_url = f'http://localhost:8000/order/api/want_order/{user_id}/{page}'
+        # Debugging: Print all orders obtained from API
+
+        print("All Orders:", all_orders)
+
+        # Pagination for the combined orders list
+        items_per_page = 20
+        paginator = Paginator(all_orders, items_per_page)
+        page = request.GET.get('page', 1)
+
+        try:
+            # Get the requested page from the paginator
+            orders_page = paginator.page(page)
+        except (PageNotAnInteger, EmptyPage):
+            raise Http404("Invalid page number")
+
+        return render(request, 'order/want_order.html', {'orders': orders_page, 'user_id': user_id})
+    return HttpResponseNotAllowed(['GET'])
 
 def sale_order(request, user_id):
+    if request.method == 'GET':
+        # Get the first page initially
+        page = 1
+        api_url = f'http://localhost:8000/order/api/sale_order/{user_id}/{page}'
 
-    api_url = f'http://localhost:8000/order/api/sale_order/{user_id}'
-    api_response = requests.get(api_url)
-    api_response = api_response.json()
-    orders = api_response.get('orders')
+        # Initialize an empty list to store orders
+        all_orders = []
 
-    # 分頁
-    items_per_page = 20
-    paginator = Paginator(orders, items_per_page)
-    page = request.GET.get('page')
+        while page < 50:
+            # Make the API request
+            api_response = requests.get(api_url)
+            api_data = api_response.json()
+            orders = api_data.get('orders')
 
-    try:
-        orders_page = paginator.page(page)
-    except PageNotAnInteger:
-        orders_page = paginator.page(1)
-    except EmptyPage:
-        orders_page = paginator.page(paginator.num_pages)
+            # Append the orders to the list
+            all_orders.extend(orders)
 
+                # Increment the page number for the next request
+            page += 1
+            api_url = f'http://localhost:8000/order/api/sale_order/{user_id}/{page}'
+        # Debugging: Print all orders obtained from API
 
-    return render(request, 'order/sale_order.html', {'orders':orders_page,'user_id': user_id})
+        print("All Orders:", all_orders)
 
+        # Pagination for the combined orders list
+        items_per_page = 20
+        paginator = Paginator(all_orders, items_per_page)
+        page = request.GET.get('page', 1)
+
+        try:
+            # Get the requested page from the paginator
+            orders_page = paginator.page(page)
+        except (PageNotAnInteger, EmptyPage):
+            raise Http404("Invalid page number")
+
+        return render(request, 'order/sale_order.html', {'orders': orders_page, 'user_id': user_id})
+    return HttpResponseNotAllowed(['GET'])
 def want_order_detail(request, user_id, order_id):
-    api_url = f'http://localhost:8000/order/api/sale_order_detail/{user_id}/{order_id}'
+    api_url = f'http://localhost:8000/order/api/want_order_detail/{user_id}/{order_id}'
     api_response = requests.get(api_url)
     api_response = api_response.json()
     books = api_response.get('books')
