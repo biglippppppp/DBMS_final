@@ -31,7 +31,7 @@ def index(request, user_id):
             return redirect('order:sale_order', user_id=user_id)
         elif request.POST.get('button') == 'want_order':
             return redirect('order:want_order', user_id=user_id)
-    return render(request, 'main_p/index.html', {'user_id': user_id})
+    return render(request, 'main_p/index.html', {'user_id': user_id, 'user_info': user_info})
 
 def new_create_order(request, user_id):
     return render(request, 'main_p/new_create_order.html', {'user_id': user_id})

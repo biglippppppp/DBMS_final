@@ -7,8 +7,8 @@
     <list default="true" id="fd0ff97a-c37d-45bc-b9b5-07d1d7002df0" name="Changes" comment="test">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order/api_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/order/api_views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/order/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/order/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/self_info/api_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/api_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/self_info/templates/self_info/detail/finish_sell_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/self_info/templates/self_info/detail/finish_sell_detail.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +57,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "chuan1215",
+    "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -105,7 +105,7 @@
       <option name="presentableId" value="Default" />
       <updated>1702628463334</updated>
       <workItem from="1702628465202" duration="11022000" />
-      <workItem from="1702654917908" duration="47458000" />
+      <workItem from="1702654917908" duration="50182000" />
     </task>
     <task id="LOCAL-00001" summary="1215 16:55">
       <option name="closed" value="true" />
@@ -140,7 +140,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="chuan1215" />
+                        <option value="main" />
                       </list>
                     </value>
                   </entry>

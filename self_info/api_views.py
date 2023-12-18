@@ -21,6 +21,7 @@ from rest_framework import serializers
 from django.db import transaction
 from django.utils import timezone
 from evaluate.api_views import UsersSerializer
+from order.api_views import BookSimpleSerializer
 
 
 
@@ -72,7 +73,7 @@ class BookObjectSerializer(serializers.Serializer):
 class OrderSerializer(serializers.Serializer):
     order_id = serializers.IntegerField()
     user_id = serializers.IntegerField()
-    books = BookObjectSerializer(many=True)
+    books = BookSimpleSerializer(many=True)
 
     def create(self, validated_data):
         # Create and return a new Order instance using the validated data
@@ -89,54 +90,42 @@ class FinishAPIView(APIView):
         for order in sale_orders:
             sells = Sell.objects.filter(orderid=order.orderid)
             books = []
+            finish_bool = False
             for sell in sells:
                 if sell.status == 'Finished':
+                    finish_bool = True
+            if finish_bool:
+                for sell in sells:
                     isbn = sell.isbn.isbn
                     price = sell.price
-                    description = sell.description
-                    status = 'finished'
-                    try:
-                        receive_sale = ReceiveSale.objects.get(orderid=order.orderid)
-                        receiverid = receive_sale.userid.userid
-                        receivername = Users.objects.get(userid=receiverid).username
-                        receiver = User(receiverid, receivername)
-                    except ReceiveSale.DoesNotExist:
-                        receiver = None
                     book = Book.objects.get(isbn=isbn)
                     title = book.title
-                    author = book.author
-                    new_book = Book_object(isbn, price, description, receiver, status, title, author)
+                    new_book = BookSimpleSerializer({'isbn': isbn, 'price': price, 'title': title}).data
                     books.append(new_book)
-
-            if books != []:
-                fakeorder = Order(order.orderid, user_id, books)
-                sale_orders_list.append(fakeorder)
+                if books != []:
+                    fakeorder = Order(order.orderid, user_id, books)
+                    sale_orders_list.append(fakeorder)
 
         want_orders = []
         wo = WantOrder.objects.filter(userid=user_id)
         for order in wo:
-            look_for = LookFor.objects.filter(orderid=order.orderid)
+            finish_bool = False
+            sells = LookFor.objects.filter(orderid=order.orderid)
             books = []
-            for lf in look_for:
-                if lf.status == 'Finished':
-                    isbn = lf.isbn.isbn
-                    status = 'finished'
-                    try:
-                        receive_want = ReceiveWant.objects.get(orderid=order.orderid)
-                        receiverid = receive_want.userid.userid
-                        receivername = Users.objects.get(userid=receiverid).username
-                        receiver = User(receiverid, receivername)
-                    except ReceiveWant.DoesNotExist:
-                        receiver = User(0, "不存在")
-
+            for sell in sells:
+                if sell.status == 'Finished':
+                    finish_bool = True
+            if finish_bool:
+                for sell in sells:
+                    isbn = sell.isbn.isbn
+                    price = None
                     book = Book.objects.get(isbn=isbn)
                     title = book.title
-                    author = book.author
-                    new_book = Book_object(isbn, None, None, receiver, status, title, author)
+                    new_book = BookSimpleSerializer({'isbn': isbn, 'price': price, 'title': title}).data
                     books.append(new_book)
-            if books != []:
-                fakeorder = Order(order.orderid, user_id, books)
-                want_orders_list.append(fakeorder)
+                if books != []:
+                    fakeorder = Order(order.orderid, user_id, books)
+                    want_orders_list.append(fakeorder)
 
         sale_orders_serializer = OrderSerializer(sale_orders_list, many=True)
         want_orders_serializer = OrderSerializer(want_orders_list, many=True)
@@ -157,48 +146,43 @@ class PostingAPIView(APIView):
         for order in sale_orders:
             sells = Sell.objects.filter(orderid=order.orderid)
             books = []
+            posting_bool = False
             for sell in sells:
                 if sell.status == 'Posting':
+                    posting_bool = True
+            if posting_bool:
+                for sell in sells:
                     isbn = sell.isbn.isbn
                     price = sell.price
-                    description = sell.description
-                    status = 'posting'
-                    receiver = None
                     book = Book.objects.get(isbn=isbn)
                     title = book.title
-                    author = book.author
-                    new_book = Book_object(isbn, price, description, receiver, status, title, author)
+                    new_book = BookSimpleSerializer({'isbn': isbn, 'price': price, 'title': title}).data
                     books.append(new_book)
 
-            if books != []:
-                fakeorder = Order(order.orderid, user_id, books)
-                sale_orders_list.append(fakeorder)
+                if books != []:
+                    fakeorder = Order(order.orderid, user_id, books)
+                    sale_orders_list.append(fakeorder)
 
         want_orders = []
         wo = WantOrder.objects.filter(userid=user_id)
         for order in wo:
-            look_for = LookFor.objects.filter(orderid=order.orderid)
+            sells = LookFor.objects.filter(orderid=order.orderid)
             books = []
-            for lf in look_for:
-                if lf.status == 'Posting':
-                    isbn = lf.isbn.isbn
-                    status = 'posting'
-                    try:
-                        receive_want = ReceiveWant.objects.get(orderid=order.orderid)
-                        receiverid = receive_want.userid.userid
-                        receivername = Users.objects.get(userid=receiverid).username
-                        receiver = User(receiverid, receivername)
-                    except ReceiveWant.DoesNotExist:
-                        receiver = None
-
+            posting_bool = False
+            for sell in sells:
+                if sell.status == 'Posting':
+                    posting_bool = True
+            if posting_bool:
+                for sell in sells:
+                    isbn = sell.isbn.isbn
+                    price = None
                     book = Book.objects.get(isbn=isbn)
                     title = book.title
-                    author = book.author
-                    new_book = Book_object(isbn, None, None, receiver, status, title, author)
+                    new_book = BookSimpleSerializer({'isbn': isbn, 'price': price, 'title': title}).data
                     books.append(new_book)
-            if books != []:
-                fakeorder = Order(order.orderid, user_id, books)
-                want_orders_list.append(fakeorder)
+                if books != []:
+                    fakeorder = Order(order.orderid, user_id, books)
+                    want_orders_list.append(fakeorder)
 
         sale_orders_serializer = OrderSerializer(sale_orders_list, many=True)
         want_orders_serializer = OrderSerializer(want_orders_list, many=True)
@@ -223,45 +207,37 @@ class FinishSellAPIView(APIView):
         books_details = []
         sells = Sell.objects.filter(orderid=order_id)
         for sell in sells:
-            if sell.status == 'Finished':
-                isbn = sell.isbn.isbn
-                price = sell.price
-                description = sell.description
-                status = 'finished'
-                try:
-                    receive_sale = ReceiveSale.objects.get(orderid=order_id)
-                    receiverid = receive_sale.userid.userid
-                    receivername = Users.objects.get(userid=receiverid).username
-                    receiver = User(receiverid, receivername)
-                except ReceiveSale.DoesNotExist:
-                    receiver = None
-                book = Book.objects.get(isbn=isbn)
-                title = book.title
-                author = book.author
-                require = Require.objects.get(isbn=isbn)
-                course_id = require.courseid.courseid
-                course = Course.objects.get(courseid=course_id)
-                academic_year = course.academicyear
-                book_category = BookCategory.objects.get(isbn=isbn)
-                category = book_category.category
-                courseName = course.coursename
-                teacherName = course.instructorname
-                book_detail = {
-                    'isbn': isbn,
-                    'price': price,
-                    'description': description,
-                    'receiver': receiver,
-                    'status': status,
-                    'title': title,
-                    'author':author,
-                    'category':category,
-                    'courseID': course_id,
-                    'academic_year': academic_year,
-                    'courseName': courseName,
-                    'teacherName': teacherName,
-                }
+            isbn = sell.isbn.isbn
+            price = sell.price
+            description = sell.description
+            status = sell.status
+            book = Book.objects.get(isbn=isbn)
+            title = book.title
+            author = book.author
+            require = Require.objects.get(isbn=isbn)
+            course_id = require.courseid.courseid
+            course = Course.objects.get(courseid=course_id)
+            academic_year = course.academicyear
+            book_category = BookCategory.objects.get(isbn=isbn)
+            category = book_category.category
+            courseName = course.coursename
+            teacherName = course.instructorname
+            book_detail = {
+                'isbn': isbn,
+                'price': price,
+                'description': description,
+                'receiver': None,
+                'status': status,
+                'title': title,
+                'author':author,
+                'category':category,
+                'courseID': course_id,
+                'academic_year': academic_year,
+                'courseName': courseName,
+                'teacherName': teacherName,
+            }
 
-                books_details.append(book_detail)
+            books_details.append(book_detail)
 
         serializer = BookDetailSerializer(data=books_details, many=True)
         serializer.is_valid()
@@ -284,43 +260,36 @@ class FinishWantAPIView(APIView):
         books_details = []
         sells = LookFor.objects.filter(orderid=order_id)
         for sell in sells:
-            if sell.status == 'Finished':
-                isbn = sell.isbn.isbn
-                status = 'finished'
-                try:
-                    receive_want = ReceiveWant.objects.get(orderid=order_id)
-                    receiverid = receive_want.userid.userid
-                    receivername = Users.objects.get(userid=receiverid).username
-                    receiver = User(receiverid, receivername)
-                except ReceiveWant.DoesNotExist:
-                    receiver = None
-                book = Book.objects.get(isbn=isbn)
-                title = book.title
-                author = book.author
-                require = Require.objects.get(isbn=isbn)
-                course_id = require.courseid.courseid
-                course = Course.objects.get(courseid=course_id)
-                academic_year = course.academicyear
-                book_category = BookCategory.objects.get(isbn=isbn)
-                category = book_category.category
-                courseName = course.coursename
-                teacherName = course.instructorname
-                book_detail = {
-                    'isbn': isbn,
-                    'price': None,
-                    'description': None,
-                    'receiver': receiver,
-                    'status': status,
-                    'title': title,
-                    'author': author,
-                    'category': category,
-                    'courseID': course_id,
-                    'academic_year': academic_year,
-                    'courseName': courseName,
-                    'teacherName': teacherName,
-                }
-
-                books_details.append(book_detail)
+            isbn = sell.isbn.isbn
+            status = sell.status
+            description = sell.description
+            receiver = None
+            book = Book.objects.get(isbn=isbn)
+            title = book.title
+            author = book.author
+            require = Require.objects.get(isbn=isbn)
+            course_id = require.courseid.courseid
+            course = Course.objects.get(courseid=course_id)
+            academic_year = course.academicyear
+            book_category = BookCategory.objects.get(isbn=isbn)
+            category = book_category.category
+            courseName = course.coursename
+            teacherName = course.instructorname
+            book_detail = {
+                'isbn': isbn,
+                'price': None,
+                'description': description,
+                'receiver': receiver,
+                'status': status,
+                'title': title,
+                'author': author,
+                'category': category,
+                'courseID': course_id,
+                'academic_year': academic_year,
+                'courseName': courseName,
+                'teacherName': teacherName,
+            }
+            books_details.append(book_detail)
 
         serializer = BookDetailSerializer(data=books_details, many=True)
         serializer.is_valid()
@@ -344,39 +313,37 @@ class PostingSellAPIView(APIView):
         books_details = []
         sells = Sell.objects.filter(orderid=order_id)
         for sell in sells:
-            if sell.status == 'Posting':
-                isbn = sell.isbn.isbn
-                price = sell.price
-                description = sell.description
-                status = 'posting'
-                receiver = None
-                book = Book.objects.get(isbn=isbn)
-                title = book.title
-                author = book.author
-                require = Require.objects.get(isbn=isbn)
-                course_id = require.courseid.courseid
-                course = Course.objects.get(courseid=course_id)
-                academic_year = course.academicyear
-                book_category = BookCategory.objects.get(isbn=isbn)
-                category = book_category.category
-                courseName = course.coursename
-                teacherName = course.instructorname
-                book_detail = {
-                    'isbn': isbn,
-                    'price': price,
-                    'description': description,
-                    'receiver': receiver,
-                    'status': status,
-                    'title': title,
-                    'author': author,
-                    'category': category,
-                    'courseID': course_id,
-                    'academic_year': academic_year,
-                    'courseName': courseName,
-                    'teacherName': teacherName,
-                }
-
-                books_details.append(book_detail)
+            isbn = sell.isbn.isbn
+            price = sell.price
+            description = sell.description
+            status = sell.status
+            receiver = None
+            book = Book.objects.get(isbn=isbn)
+            title = book.title
+            author = book.author
+            require = Require.objects.get(isbn=isbn)
+            course_id = require.courseid.courseid
+            course = Course.objects.get(courseid=course_id)
+            academic_year = course.academicyear
+            book_category = BookCategory.objects.get(isbn=isbn)
+            category = book_category.category
+            courseName = course.coursename
+            teacherName = course.instructorname
+            book_detail = {
+                'isbn': isbn,
+                'price': price,
+                'description': description,
+                'receiver': receiver,
+                'status': status,
+                'title': title,
+                'author': author,
+                'category': category,
+                'courseID': course_id,
+                'academic_year': academic_year,
+                'courseName': courseName,
+                'teacherName': teacherName,
+            }
+            books_details.append(book_detail)
 
         serializer = BookDetailSerializer(data=books_details, many=True)
         serializer.is_valid()
@@ -399,37 +366,37 @@ class PostingWantAPIView(APIView):
         books_details = []
         sells = LookFor.objects.filter(orderid=order_id)
         for sell in sells:
-            if sell.status == 'Posting':
-                isbn = sell.isbn.isbn
-                status = 'posting'
-                receiver = User(0, '不存在')
-                book = Book.objects.get(isbn=isbn)
-                title = book.title
-                author = book.author
-                require = Require.objects.get(isbn=isbn)
-                course_id = require.courseid.courseid
-                course = Course.objects.get(courseid=course_id)
-                academic_year = course.academicyear
-                book_category = BookCategory.objects.get(isbn=isbn)
-                category = book_category.category
-                courseName = course.coursename
-                teacherName = course.instructorname
-                book_detail = {
-                    'isbn': isbn,
-                    'price': None,
-                    'description': None,
-                    'receiver': receiver,
-                    'status': status,
-                    'title': title,
-                    'author': author,
-                    'category': category,
-                    'courseID': course_id,
-                    'academic_year': academic_year,
-                    'courseName': courseName,
-                    'teacherName': teacherName,
-                }
+            isbn = sell.isbn.isbn
+            status = sell.status
+            description = sell.description
+            receiver = User(0, '不存在')
+            book = Book.objects.get(isbn=isbn)
+            title = book.title
+            author = book.author
+            require = Require.objects.get(isbn=isbn)
+            course_id = require.courseid.courseid
+            course = Course.objects.get(courseid=course_id)
+            academic_year = course.academicyear
+            book_category = BookCategory.objects.get(isbn=isbn)
+            category = book_category.category
+            courseName = course.coursename
+            teacherName = course.instructorname
+            book_detail = {
+                'isbn': isbn,
+                'price': None,
+                'description': description,
+                'receiver': receiver,
+                'status': status,
+                'title': title,
+                'author': author,
+                'category': category,
+                'courseID': course_id,
+                'academic_year': academic_year,
+                'courseName': courseName,
+                'teacherName': teacherName,
+            }
 
-                books_details.append(book_detail)
+            books_details.append(book_detail)
 
         serializer = BookDetailSerializer(data=books_details, many=True)
         serializer.is_valid()

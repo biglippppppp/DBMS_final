@@ -18,7 +18,6 @@ from self_info.models import Book_detail
 from self_info.models import Order
 from rest_framework import serializers
 from .models import Book_simple
-from self_info.api_views import BookDetailSerializer
 from self_info.models import User
 from evaluate.api_views import UsersSerializer
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -26,6 +25,24 @@ from django.utils import timezone
 from django.http import Http404
 
 
+class BookDetailSerializer(serializers.Serializer):
+    isbn = serializers.CharField()
+    price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    description = serializers.CharField()
+    status = serializers.CharField()
+    receiver = serializers.CharField()
+    title = serializers.CharField()
+    author = serializers.CharField()
+    category = serializers.CharField()
+    courseID = serializers.CharField()
+    academic_year = serializers.CharField()
+    course_name = serializers.CharField(source='courseName')  # Map to the correct attribute
+    teacher_name = serializers.CharField(source='teacherName')  # Map to the correct attribute
+    def to_representation(self, instance):
+        # Override the to_representation method to handle custom serialization
+        representation = super().to_representation(instance)
+        # Add any additional custom serialization logic here
+        return representation
 
 
 
