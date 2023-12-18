@@ -16,41 +16,20 @@ def index(request):
 
 def want_order(request, user_id):
     if request.method == 'GET':
-        # Get the first page initially
-        page = 1
-        api_url = f'http://localhost:8000/order/api/want_order/{user_id}/{page}'
-
-        # Initialize an empty list to store orders
-        all_orders = []
-
-        while page < 50:
-            # Make the API request
-            api_response = requests.get(api_url)
-            api_data = api_response.json()
-            orders = api_data.get('orders')
-
-            # Append the orders to the list
-            all_orders.extend(orders)
-
-            # Increment the page number for the next request
-            page += 1
-            api_url = f'http://localhost:8000/order/api/want_order/{user_id}/{page}'
-        # Debugging: Print all orders obtained from API
-
-        print("All Orders:", all_orders)
-
-        # Pagination for the combined orders list
-        items_per_page = 20
-        paginator = Paginator(all_orders, items_per_page)
         page = request.GET.get('page', 1)
+        # Call the API with the page parameter
+        api_url = f'http://localhost:8000/order/api/sale_order/{user_id}/{page}'
+        api_response = requests.get(api_url)
+        api_data = api_response.json()
 
-        try:
-            # Get the requested page from the paginator
-            orders_page = paginator.page(page)
-        except (PageNotAnInteger, EmptyPage):
-            raise Http404("Invalid page number")
+        # Get the orders from the API response
+        orders = api_data.get('orders', [])
+        nested_page_range = api_data.get('page_range')
 
-        return render(request, 'order/want_order.html', {'orders': orders_page, 'user_id': user_id})
+        # Flatten the nested lists
+        page_range = list(chain.from_iterable(nested_page_range))
+
+        return render(request, 'order/want_order.html', {'orders': orders, 'user_id': user_id, 'page_range': page_range})
     return HttpResponseNotAllowed(['GET'])
 
 def sale_order(request, user_id):

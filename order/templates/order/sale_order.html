@@ -30,7 +30,7 @@
     </div>
 
 	<!-- 加分頁 -->
-	{% for page in orders.paginator.page_range %}
+	{% for page in page_range %}
         <a href="?page={{ page }}">{{ page }}</a>
     {% endfor %}
 

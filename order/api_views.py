@@ -80,6 +80,9 @@ class SaleOrderAPIView(APIView):
 
         # Paginate the sale orders
         paginator = Paginator(all_sale_orders, self.get_items_per_page())
+        paginator_valuable = paginator.page(page)
+        page_range = list(paginator_valuable.paginator.page_range),
+
         try:
             sale_orders = paginator.page(page)
         except (PageNotAnInteger, EmptyPage):
@@ -97,7 +100,7 @@ class SaleOrderAPIView(APIView):
         # Serialize the sale orders
         sale_orders_serializer = OrderSerializer(sale_orders_list, many=True)
 
-        return Response({'orders': sale_orders_serializer.data})
+        return Response({'orders': sale_orders_serializer.data, 'page_range': page_range})
 
     def get_items_per_page(self):
         # Implement your logic for determining items per page
@@ -125,6 +128,9 @@ class WantOrderAPIView(APIView):
 
         # Paginate the sale orders
         paginator = Paginator(all_sale_orders, self.get_items_per_page())
+        paginator_valuable = paginator.page(page)
+        page_range = list(paginator_valuable.paginator.page_range),
+
         try:
             sale_orders = paginator.page(page)
         except (PageNotAnInteger, EmptyPage):
@@ -142,7 +148,7 @@ class WantOrderAPIView(APIView):
         # Serialize the sale orders
         sale_orders_serializer = OrderSerializer(sale_orders_list, many=True)
 
-        return Response({'orders': sale_orders_serializer.data})
+        return Response({'orders': sale_orders_serializer.data, 'page_range': page_range})
 
     def get_items_per_page(self):
         # Implement your logic for determining items per page

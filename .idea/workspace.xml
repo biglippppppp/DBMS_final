@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="fd0ff97a-c37d-45bc-b9b5-07d1d7002df0" name="Changes" comment="test">
       <change beforePath="$PROJECT_DIR$/order/api_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/order/api_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order/templates/order/sale_order.html" beforeDir="false" afterPath="$PROJECT_DIR$/order/templates/order/sale_order.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/order/templates/order/want_order.html" beforeDir="false" afterPath="$PROJECT_DIR$/order/templates/order/want_order.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/order/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/order/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
