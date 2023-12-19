@@ -15,7 +15,7 @@
 訊。如果有使用者或上架書籍違反規定,Admin 能強制刪除該用戶或是該書及的上架
 貼文。可查詢所有已完成的交易紀錄,期望能提供良好的使用者經驗。
 ## 安裝
-1. 克隆專案到本地機器：
+1. Clone專案到本地機器：
 
 ```
 git clone https://github.com/your-username/your-project-name.git
