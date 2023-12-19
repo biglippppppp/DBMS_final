@@ -29,11 +29,11 @@
    - 輸入資料庫名稱並儲存。
 
 
-6. **還原資料庫：**
-   - 若您有一個資料庫備份檔案（如 `DBMS_final_project_backup_v2.sql`），您可以透過以下步驟來還原它：
-     1. 在 pgAdmin 中選擇您剛建立的資料庫。
-     2. 點擊「工具」菜單中的「還原」選項。
-     3. 選擇您的 `.sql` 備份檔案，並開始還原過程。
+6. **導入資料庫結構和資料：**
+   - 在命令行界面中，確保你位於包含 `DBMS_final_project_backup_v4.1.sql` 文件的目錄中。
+   - 執行以下命令導入資料庫結構和資料到剛建立的資料庫中：
+   ```bash
+   psql -U your_postgres_username -d DBMS_final_project_backup_v4.1 -f DBMS_final_project_backup_v4.1.sql
 
 
 完成以上步驟後，您將擁有一個已還原的 PostgreSQL 資料庫，適用於 Django 專案。
