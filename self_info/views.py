@@ -1,6 +1,10 @@
 from django.shortcuts import render,redirect
 import requests
 import json
+from django.urls import reverse
+from django.utils.http import urlencode
+
+
 app_name = 'self_info'
 def index(request, user_id):
     api_url = f'http://localhost:8000/main_p/api/{user_id}'
@@ -95,6 +99,7 @@ def posting_sell_detail(request, order_id, user_id):
                     }
                     url = f'http://localhost:8000/self_info/api/renew'
                     response = requests.post(url, json=data)
+                    return redirect(request.path)
 
     return render(request, 'self_info/detail/posting_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id, 'receivers': receivers})
 
@@ -153,6 +158,9 @@ def posting_want_detail(request, order_id, user_id):
                     }
                     url = f'http://localhost:8000/self_info/api/renew'
                     response = requests.post(url, json=data)
+                    url = reverse('self_info:posting_want_detail', kwargs={'user_id': user_id, 'order_id': order_id})
+
+                    return redirect(url)
 
     return render(request, 'self_info/detail/posting_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id, 'receivers': receivers})
 

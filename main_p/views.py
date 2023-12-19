@@ -60,9 +60,14 @@ def create_sale_order(request, user_id):
             'type': 'sell',
         })
 
-
-        # Build the redirect URL with only 'user_id' and 'isbns' as path parameters
-        redirect_url = f'/main_p/book_detail/{user_id}/{"、".join(detail_isbn)}/?{query_params}'
+        if len(detail_isbn) == 0:
+            # Handle the case where there are no ISBNs, you can redirect to a different URL or handle it as needed
+            redirect_url = f'/main_p/book_detail/{user_id}/no_isbn/?{query_params}'
+            # If only one ISBN, use it directly in the path instead of joining a list
+        elif len(detail_isbn) == 1:
+            redirect_url = f'/main_p/book_detail/{user_id}/{detail_isbn[0]}/?{query_params}'
+        else:
+            redirect_url = f'/main_p/book_detail/{user_id}/{"、".join(detail_isbn)}/?{query_params}'
 
         # Redirect to the constructed URL
         return redirect(redirect_url)
@@ -90,8 +95,14 @@ def create_want_order(request, user_id):
             'type': 'want',
         })
 
-        # Build the redirect URL with only 'user_id' and 'isbns' as path parameters
-        redirect_url = f'/main_p/book_detail/{user_id}/{"、".join(detail_isbn)}/?{query_params}'
+        if len(detail_isbn) == 0:
+            # Handle the case where there are no ISBNs, you can redirect to a different URL or handle it as needed
+            redirect_url = f'/main_p/book_detail/{user_id}/no_isbn/?{query_params}'
+            # If only one ISBN, use it directly in the path instead of joining a list
+        elif len(detail_isbn) == 1:
+            redirect_url = f'/main_p/book_detail/{user_id}/{detail_isbn[0]}/?{query_params}'
+        else:
+            redirect_url = f'/main_p/book_detail/{user_id}/{"、".join(detail_isbn)}/?{query_params}'
 
         # Redirect to the constructed URL
         return redirect(redirect_url)
@@ -101,18 +112,19 @@ def book_detail(request, user_id, isbns):
     with transaction.atomic():
         api_url = f'http://localhost:8000/main_p/api/posts/{user_id}/'
         isbns_list = isbns.split('、') if isbns else []
-        isbns = request.GET.get('all_isbns').split('、') if request.GET.get('isbns') else []
+        all_isbns = request.GET.get('all_isbns').split('、') if request.GET.get('all_isbns') else []
+        print('cicndicninwdn', all_isbns)
         prices = request.GET.get('prices').split('、') if request.GET.get('prices') else []
         descriptions = request.GET.get('descriptions').split('、') if request.GET.get('descriptions') else []
         type = request.GET.get('type')
         data = {
-            'isbns': isbns,
+            'all_isbns': all_isbns,
             'prices': prices,
             'descriptions': descriptions,
             'order_type': type
         }
 
-        if isbns_list == []:
+        if isbns_list[0] == 'no_isbn':
             response = requests.get(api_url, json=data)
             api_response = response.json()
             order_id = api_response.get('order_id')
@@ -122,20 +134,21 @@ def book_detail(request, user_id, isbns):
                 return redirect('self_info:posting_want_detail', user_id=user_id, order_id=order_id)
         else:
             if request.method == 'POST':
-                for isbn in request.POST.getlist('ISBN'):
-                    # Retrieve data for each ISBN
-                    book_title = request.POST.get(f'bookTitle_{isbn}')
-                    author = request.POST.get(f'author_{isbn}')
-                    category = request.POST.get(f'category_{isbn}')
-                    course_id = request.POST.get(f'courseID_{isbn}')
-                    academic_year = request.POST.get(f'academicYear_{isbn}')
-                    course_name = request.POST.get(f'courseName_{isbn}')
-                    instructor_name = request.POST.get(f'instructorName_{isbn}')
-
-                    # Create a dictionary with form data for each ISBN
+                isbns = request.POST.getlist('ISBN')
+                book_titles = request.POST.getlist('bookTitle')
+                authors = request.POST.getlist('author')
+                categories = request.POST.getlist('category')
+                course_ids = request.POST.getlist('courseID')
+                academic_years = request.POST.getlist('academic_year')
+                course_names = request.POST.getlist('course_name')
+                instructor_names = request.POST.getlist('instructor_name')
+                # Zip the lists together to iterate over corresponding elements
+                for isbn, title, author, category, course_id, academic_year, course_name, instructor_name in zip(
+                        isbns, book_titles, authors, categories, course_ids, academic_years, course_names, instructor_names
+                ):
                     form_data = {
                         'ISBN': isbn,
-                        'bookTitle': book_title,
+                        'bookTitle': title,
                         'author': author,
                         'category': category,
                         'courseID': course_id,
@@ -143,7 +156,6 @@ def book_detail(request, user_id, isbns):
                         'course_name': course_name,
                         'instructor_name': instructor_name,
                     }
-
                     response = requests.post(api_url, json=form_data)
                     api_response = response.json()
                 response = requests.get(api_url, json=data)
@@ -153,7 +165,7 @@ def book_detail(request, user_id, isbns):
                     return redirect('self_info:posting_sell_detail', user_id=user_id, order_id=order_id)
                 else:
                     return redirect('self_info:posting_want_detail', user_id=user_id, order_id=order_id)
-        return render(request, 'main_p/book_detail.html', {'user_id': user_id, 'isbns': isbns_list})
+    return render(request, 'main_p/book_detail.html', {'user_id': user_id, 'isbns': isbns_list})
 
 
 def search(request, user_id):

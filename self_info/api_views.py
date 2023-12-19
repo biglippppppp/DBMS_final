@@ -90,11 +90,11 @@ class FinishAPIView(APIView):
         for order in sale_orders:
             sells = Sell.objects.filter(orderid=order.orderid)
             books = []
-            finish_bool = False
+            posting_bool = False
             for sell in sells:
-                if sell.status == 'Finished':
-                    finish_bool = True
-            if finish_bool:
+                if sell.status == 'Posting':
+                    posting_bool = True
+            if not posting_bool:
                 for sell in sells:
                     isbn = sell.isbn.isbn
                     price = sell.price
@@ -109,13 +109,14 @@ class FinishAPIView(APIView):
         want_orders = []
         wo = WantOrder.objects.filter(userid=user_id)
         for order in wo:
-            finish_bool = False
+            posting_bool = False
             sells = LookFor.objects.filter(orderid=order.orderid)
             books = []
+
             for sell in sells:
-                if sell.status == 'Finished':
-                    finish_bool = True
-            if finish_bool:
+                if sell.status == 'Posting':
+                    posting_bool = True
+            if not posting_bool:
                 for sell in sells:
                     isbn = sell.isbn.isbn
                     price = None
@@ -172,6 +173,7 @@ class PostingAPIView(APIView):
             for sell in sells:
                 if sell.status == 'Posting':
                     posting_bool = True
+            print('fwjifcmdcii', posting_bool, order.orderid)
             if posting_bool:
                 for sell in sells:
                     isbn = sell.isbn.isbn
@@ -583,14 +585,8 @@ class RenewStatusAPIView(APIView):
             current_datetime = timezone.now()
             current_date = current_datetime.date()
             if type == 'sell':
-                sell_instance = Sell.objects.select_for_update().get(orderid__orderid=order_id, isbn__isbn=isbn)
-                sell_instance.status = status
-                sell_instance.finishdate = current_date
-                sell_instance.save()
+                sell_instance = Sell.objects.select_for_update().filter(orderid__orderid=order_id, isbn__isbn=isbn).update(status=status, finishdate=current_date)
             else:
-                look_for_instance = LookFor.objects.select_for_update().get(orderid__orderid=order_id, isbn_id=isbn)
-                look_for_instance.status = status
-                look_for_instance.finishdate = current_date
-                look_for_instance.save()
+                look_for_instance = LookFor.objects.select_for_update().filter(orderid__orderid=order_id, isbn_id=isbn).update(status=status, finishdate=current_date)
             return Response()
 

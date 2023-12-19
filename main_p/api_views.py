@@ -42,35 +42,25 @@ class PostAPIView(APIView):
     def get(self, request, user_id, *args, **kwargs):
         user = Users.objects.get(userid=user_id)
         order_type = request.data.get('order_type')
-        isbns = request.data.get('isbns', [])
+        isbns = request.data.get('all_isbns', [])
         prices = request.data.get('prices', [])
         descriptions = request.data.get('descriptions', [])
         current_datetime = timezone.now()
         current_date = current_datetime.date()
+        descriptions = descriptions or ['']
 
         if order_type == 'sell':
             order_id = SaleOrder.objects.count() + 1
             sale_order = SaleOrder.objects.create(orderid=order_id, userid=user, postdate=current_date)
-
-            for i in range(len(isbns)):
-                isbn = isbns[i]
-                price = prices[i]
-                description = descriptions[i]
-                status = 'Posting'
+            for isbn, price, description in zip(isbns, prices, descriptions):
                 book = Book.objects.get(isbn=isbn)
-                Sell.objects.create(orderid=sale_order, isbn=book, price=price, status=status, description=description, finishdate=None)
-
-
-
+                Sell.objects.create(orderid=sale_order, isbn=book, price=price, status='Posting',
+                                    description=description, finishdate=None)
         else:
             order_id = WantOrder.objects.count() + 1
             want_order = WantOrder.objects.create(orderid=order_id, userid=user, postdate=current_date)
 
-            for i in range(len(isbns)):
-                isbn = isbns[i]
-                price = prices[i]
-                description = descriptions[i]
-                status = 'Posting'
+            for isbn, description in zip(isbns, descriptions):
                 book = Book.objects.get(isbn=isbn)
                 LookFor.objects.create(orderid=want_order, isbn=book, status=status, description=description, finishdate=None)
         return Response({'user_id': user_id, 'order_id': order_id})
