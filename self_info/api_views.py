@@ -214,12 +214,14 @@ class FinishSellAPIView(APIView):
             book = Book.objects.get(isbn=isbn)
             title = book.title
             author = book.author
-            require = Require.objects.get(isbn=isbn)
-            course_id = require.courseid.courseid
-            course = Course.objects.get(courseid=course_id)
-            academic_year = course.academicyear
-            book_category = BookCategory.objects.get(isbn=isbn)
-            category = book_category.category
+            requires = Require.objects.filter(isbn=isbn)
+            for require in requires:
+                course_id = require.courseid.courseid
+                course = Course.objects.get(courseid=course_id)
+                academic_year = course.academicyear
+            book_categories = BookCategory.objects.filter(isbn=isbn)
+            for book_category in book_categories:
+                category = book_category.category
             courseName = course.coursename
             teacherName = course.instructorname
             book_detail = {
@@ -267,12 +269,14 @@ class FinishWantAPIView(APIView):
             book = Book.objects.get(isbn=isbn)
             title = book.title
             author = book.author
-            require = Require.objects.get(isbn=isbn)
-            course_id = require.courseid.courseid
-            course = Course.objects.get(courseid=course_id)
-            academic_year = course.academicyear
-            book_category = BookCategory.objects.get(isbn=isbn)
-            category = book_category.category
+            requires = Require.objects.filter(isbn=isbn)
+            for require in requires:
+                course_id = require.courseid.courseid
+                course = Course.objects.get(courseid=course_id)
+                academic_year = course.academicyear
+            book_categories = BookCategory.objects.filter(isbn=isbn)
+            for book_category in book_categories:
+                category = book_category.category
             courseName = course.coursename
             teacherName = course.instructorname
             book_detail = {
@@ -321,12 +325,14 @@ class PostingSellAPIView(APIView):
             book = Book.objects.get(isbn=isbn)
             title = book.title
             author = book.author
-            require = Require.objects.get(isbn=isbn)
-            course_id = require.courseid.courseid
-            course = Course.objects.get(courseid=course_id)
-            academic_year = course.academicyear
-            book_category = BookCategory.objects.get(isbn=isbn)
-            category = book_category.category
+            requires = Require.objects.filter(isbn=isbn)
+            for require in requires:
+                course_id = require.courseid.courseid
+                course = Course.objects.get(courseid=course_id)
+                academic_year = course.academicyear
+            book_categories = BookCategory.objects.filter(isbn=isbn)
+            for book_category in book_categories:
+                category = book_category.category
             courseName = course.coursename
             teacherName = course.instructorname
             book_detail = {
@@ -373,12 +379,14 @@ class PostingWantAPIView(APIView):
             book = Book.objects.get(isbn=isbn)
             title = book.title
             author = book.author
-            require = Require.objects.get(isbn=isbn)
-            course_id = require.courseid.courseid
-            course = Course.objects.get(courseid=course_id)
-            academic_year = course.academicyear
-            book_category = BookCategory.objects.get(isbn=isbn)
-            category = book_category.category
+            requires = Require.objects.filter(isbn=isbn)
+            for require in requires:
+                course_id = require.courseid.courseid
+                course = Course.objects.get(courseid=course_id)
+                academic_year = course.academicyear
+            book_categories = BookCategory.objects.filter(isbn=isbn)
+            for book_category in book_categories:
+                category = book_category.category
             courseName = course.coursename
             teacherName = course.instructorname
             book_detail = {
@@ -482,12 +490,14 @@ class ReceiveSellAPIView(APIView):
             book = Book.objects.get(isbn=isbn)
             title = book.title
             author = book.author
-            require = Require.objects.get(isbn=isbn)
-            course_id = require.courseid.courseid
-            course = Course.objects.get(courseid=course_id)
-            academic_year = course.academicyear
-            book_category = BookCategory.objects.get(isbn=isbn)
-            category = book_category.category
+            requires = Require.objects.filter(isbn=isbn)
+            for require in requires:
+                course_id = require.courseid.courseid
+                course = Course.objects.get(courseid=course_id)
+                academic_year = course.academicyear
+            book_categories = BookCategory.objects.filter(isbn=isbn)
+            for book_category in book_categories:
+                category = book_category.category
             courseName = course.coursename
             teacherName = course.instructorname
             book_detail = {
@@ -528,12 +538,14 @@ class ReceiveWantAPIView(APIView):
             book = Book.objects.get(isbn=isbn)
             title = book.title
             author = book.author
-            require = Require.objects.get(isbn=isbn)
-            course_id = require.courseid.courseid
-            course = Course.objects.get(courseid=course_id)
-            academic_year = course.academicyear
-            book_category = BookCategory.objects.get(isbn=isbn)
-            category = book_category.category
+            requires = Require.objects.filter(isbn=isbn)
+            for require in requires:
+                course_id = require.courseid.courseid
+                course = Course.objects.get(courseid=course_id)
+                academic_year = course.academicyear
+            book_categories = BookCategory.objects.filter(isbn=isbn)
+            for book_category in book_categories:
+                category = book_category.category
             courseName = course.coursename
             teacherName = course.instructorname
             book_detail = {

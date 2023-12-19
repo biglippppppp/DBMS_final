@@ -146,9 +146,9 @@ class WantOrderAPIView(APIView):
                 sale_orders_list.append(fake_order)
 
         # Serialize the sale orders
-        sale_orders_serializer = OrderSerializer(sale_orders_list, many=True)
+        want_orders_serializer = OrderSerializer(sale_orders_list, many=True)
 
-        return Response({'orders': sale_orders_serializer.data, 'page_range': page_range})
+        return Response({'orders': want_orders_serializer.data, 'page_range': page_range})
 
     def get_items_per_page(self):
         # Implement your logic for determining items per page
@@ -172,6 +172,14 @@ class WantOrderAPIView(APIView):
 
 class SaleOrderDetailAPIView(APIView):
     def get(self, request, user_id, order_id, *args, **kwargs):
+        receiver_ids = []
+        users = []
+        receive_sales = ReceiveSale.objects.filter(orderid=order_id)
+        for receive_sale in receive_sales:
+            receiver_ids.append(receive_sale.userid.userid)
+        for id in receiver_ids:
+            users.append(Users.objects.get(userid=id))
+        user_serializer = UsersSerializer(users, many=True)
         books_details = []
         sells = Sell.objects.filter(orderid=order_id)
         for sell in sells:
@@ -179,22 +187,18 @@ class SaleOrderDetailAPIView(APIView):
             price = sell.price
             description = sell.description
             status = sell.status
-            try:
-                receivesale = ReceiveSale.objects.get(orderid=order_id)
-                receiverid = receivesale.userid.userid
-                receivername = Users.objects.get(userid=receiverid).username
-                receiver = User(receiverid, receivername)
-            except ReceiveSale.DoesNotExist:
-                receiver = User(0, "不存在")
+            receiver = None
             book = Book.objects.get(isbn=isbn)
             title = book.title
             author = book.author
-            require = Require.objects.get(isbn=isbn)
-            course_id = require.courseid.courseid
-            course = Course.objects.get(courseid=course_id)
-            academic_year = course.academicyear
-            book_category = BookCategory.objects.get(isbn=isbn)
-            category = book_category.category
+            requires = Require.objects.filter(isbn=isbn)
+            for require in requires:
+                course_id = require.courseid.courseid
+                course = Course.objects.get(courseid=course_id)
+                academic_year = course.academicyear
+            book_categories = BookCategory.objects.filter(isbn=isbn)
+            for book_category in book_categories:
+                category = book_category.category
             courseName = course.coursename
             teacherName = course.instructorname
             book_detail = {
@@ -220,32 +224,36 @@ class SaleOrderDetailAPIView(APIView):
         # Serialize the data
         serialized_data = serializer.data
 
-        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id})
+        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id, 'receivers': user_serializer.data})
 
 
 class WantOrderDetailAPIView(APIView):
     def get(self, request, user_id, order_id, *args, **kwargs):
+        receiver_ids = []
+        users = []
+        receive_sales = ReceiveWant.objects.filter(orderid=order_id)
+        for receive_sale in receive_sales:
+            receiver_ids.append(receive_sale.userid.userid)
+        for id in receiver_ids:
+            users.append(Users.objects.get(userid=id))
+        user_serializer = UsersSerializer(users, many=True)
         books_details = []
         sells = LookFor.objects.filter(orderid=order_id)
         for sell in sells:
             isbn = sell.isbn.isbn
             status = sell.status
-            try:
-                receivesale = ReceiveWant.objects.get(orderid=order_id)
-                receiverid = receivesale.userid.userid
-                receivername = Users.objects.get(userid=receiverid).username
-                receiver = User(receiverid, receivername)
-            except ReceiveWant.DoesNotExist:
-                receiver = User(0, "不存在")
+            receiver = None
             book = Book.objects.get(isbn=isbn)
             title = book.title
             author = book.author
-            require = Require.objects.get(isbn=isbn)
-            course_id = require.courseid.courseid
-            course = Course.objects.get(courseid=course_id)
-            academic_year = course.academicyear
-            book_category = BookCategory.objects.get(isbn=isbn)
-            category = book_category.category
+            requires = Require.objects.filter(isbn=isbn)
+            for require in requires:
+                course_id = require.courseid.courseid
+                course = Course.objects.get(courseid=course_id)
+                academic_year = course.academicyear
+            book_categories = BookCategory.objects.filter(isbn=isbn)
+            for book_category in book_categories:
+                category = book_category.category
             courseName = course.coursename
             teacherName = course.instructorname
             book_detail = {
@@ -271,7 +279,7 @@ class WantOrderDetailAPIView(APIView):
         # Serialize the data
         serialized_data = serializer.data
 
-        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id})
+        return Response({'books': serialized_data, 'user_id': user_id, 'order_id': order_id, 'receivers': user_serializer.data})
 
 class ReceiveAPIView(APIView):
     def post(self, request, user_id, poster_id, order_id, type,  *args, **kwargs):
@@ -280,16 +288,13 @@ class ReceiveAPIView(APIView):
         current_datetime = timezone.now()
         current_date = current_datetime.date()
         if type == 'sale_order':
-            sell_instance = ReceiveSale.objects.filter(orderid__orderid=order_id)
-            sell_instance.userid = user_id
-            sell_instance.reseivedate = current_date
-            sell_instance.save()
+            user_id = Users.objects.get(userid=user_id)
+            order_id = SaleOrder.objects.get(orderid=order_id)
+            receivedate = current_date
+            ReceiveSale.objects.create(userid=user_id, orderid=order_id, receivedate=receivedate)
         else:
-            instance = LookFor.objects.filter(orderid__orderid=order_id)
-            instance.userid = user_id
-            instance.reseivedate = current_date
-            instance.save()
-
-
-        # Return the serialized data in the response
+            user_id = Users.objects.get(userid=user_id)
+            order_id = WantOrder.objects.get(orderid=order_id)
+            receivedate = current_date
+            ReceiveSale.objects.create(userid=user_id, orderid=order_id, receivedate=receivedate)
         return Response({'poster': serializer.data})

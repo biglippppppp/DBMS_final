@@ -18,7 +18,7 @@ def want_order(request, user_id):
     if request.method == 'GET':
         page = request.GET.get('page', 1)
         # Call the API with the page parameter
-        api_url = f'http://localhost:8000/order/api/sale_order/{user_id}/{page}'
+        api_url = f'http://localhost:8000/order/api/want_order/{user_id}/{page}'
         api_response = requests.get(api_url)
         api_data = api_response.json()
 
@@ -75,7 +75,7 @@ def want_order_detail(request, user_id, order_id):
     api_response = requests.get(api_url)
     api_response = api_response.json()
     books = api_response.get('books')
-    poster_id = WantOrder.objects.get(orderid=order_id).userid
+    poster_id = WantOrder.objects.get(orderid=order_id).userid.userid
 
     if request.method == 'POST':
         for key, value in request.POST.items():
