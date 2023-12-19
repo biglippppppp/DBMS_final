@@ -133,6 +133,8 @@ python manage.py runserver
 
 ## 登入
 請使用以下資訊去登入網站能切換使用者、管理者體驗不同功能
+```
 email：d02127318299@ntu.edu.tw
 使用者名稱：傅成偉
 密碼：MtDK7w5lTM
+```
