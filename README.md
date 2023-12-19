@@ -14,7 +14,18 @@
 能隨時查詢過去的歷史訂單。Admin 為系統管理者,有權限查看所有使用者的相關資
 訊。如果有使用者或上架書籍違反規定,Admin 能強制刪除該用戶或是該書及的上架
 貼文。可查詢所有已完成的交易紀錄,期望能提供良好的使用者經驗。
-## 安裝
+## 先決條件
+
+在開始之前，請確保您的系統已安裝 Python 3.8 或更高版本以及 pip。以下指令可以幫助您確認安裝版本：
+
+```
+python --version
+# 或 python3 --version 依據您的系統配置
+pip --version
+# 或 pip3 --version 依據您的系統配置
+```
+如果您的系統還未安裝 Python 或 pip，或者安裝的版本不符合最低要求，請訪問 Python 官網 下載並安裝適合您操作系統的最新版本。
+## 安裝步驟
 1. Clone專案到本地機器：
 
 ```
@@ -53,6 +64,7 @@ pip install -r requirements.txt
 
 在安裝過程中，系統會自動安裝 pgAdmin 工具，方便開發人員管理 PostgreSQL 資料庫。
 
+ 
 1. **開啟 pgAdmin：**
    - 在 Windows，您可以透過搜尋「pgAdmin」來開啟它。
    - 或者，在安裝目錄（例如：`C:\\Program Files\\PostgreSQL\\12\\pgAdmin 4\\bin`）中找到 `pgAdmin4` 執行檔。
