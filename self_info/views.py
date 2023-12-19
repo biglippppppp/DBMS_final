@@ -63,7 +63,7 @@ def finish_sell_detail(request, order_id, user_id):
         for key, value in request.POST.items():
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
-                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
+                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id, pre_user_id=user_id)
     return render(request, 'self_info/detail/finish_sell_detail.html', {'books': books,'user_id': user_id,
                                                                         'order_id': order_id, 'receivers': receivers})
 
@@ -79,7 +79,7 @@ def posting_sell_detail(request, order_id, user_id):
         for key, value in request.POST.items():
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
-                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
+                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id, pre_user_id=user_id)
                 elif value == 'renew':
                     # 處理更新狀態的按鈕
                     # 從按鈕名稱中提取書籍的 isbn 和訂單 ID
@@ -108,7 +108,7 @@ def received_sell_detail(request, order_id, user_id):
         for key, value in request.POST.items():
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
-                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
+                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id, pre_user_id=user_id)
     return render(request, 'self_info/detail/received_sell_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
 
 def finish_want_detail(request, order_id, user_id):
@@ -123,7 +123,7 @@ def finish_want_detail(request, order_id, user_id):
         for key, value in request.POST.items():
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
-                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
+                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id, pre_user_id=user_id)
     return render(request, 'self_info/detail/finish_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id, 'receivers': receivers})
 
 def posting_want_detail(request, order_id, user_id):
@@ -137,7 +137,7 @@ def posting_want_detail(request, order_id, user_id):
         for key, value in request.POST.items():
                 if value == 'evaluate':
                     evaluated_user_id = int(key.split('_')[1])
-                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
+                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id, pre_user_id=user_id)
                 elif value == 'renew':
                     # 處理更新狀態的按鈕
                     # 從按鈕名稱中提取書籍的 isbn 和訂單 ID
@@ -166,7 +166,7 @@ def received_want_detail(request, order_id, user_id):
                 if value == 'evaluate':
                     print(key)
                     evaluated_user_id = int(key.split('_')[1])
-                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id)
+                    return redirect('evaluate:evaluate_detail', user_id=evaluated_user_id, pre_user_id=user_id)
     return render(request, 'self_info/detail/received_want_detail.html', {'books': books,'user_id': user_id, 'order_id': order_id})
     
 def evaluate_detail(request, user_id):

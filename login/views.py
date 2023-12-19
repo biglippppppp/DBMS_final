@@ -9,8 +9,10 @@ def index(request):
         password = request.POST.get('password')
         email = request.POST.get('email')
         role = request.POST.get('role')
-
-
+        if role == 'user':
+            role = 'User'
+        elif role == 'admin':
+            role = 'Admin'
         # Assuming your API endpoint for login is something like this
         api_url = 'http://localhost:8000/api/login/'
 
@@ -24,9 +26,9 @@ def index(request):
             user_id = api_data.get('user_id')
 
             # Redirecting to the desired URL
-            if role == 'user':
+            if role == 'User':
                 return redirect('main_p:index', user_id=user_id)
-            elif role == 'admin':
+            elif role == 'Admin':
                 return redirect('admin_page:index')
 
     return render(request, 'login/index.html')

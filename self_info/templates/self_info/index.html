@@ -32,7 +32,7 @@
 		<p>姓名：{{user_info.username}}</p>
 		<p>信箱：{{user_info.email}}</p>
 		
-		<button onclick="location.href='{% url 'evaluate:evaluate_detail' user_id=user_id %}'">瀏覽所有評價</button>
+		<button onclick="location.href='{% url 'evaluate:evaluate_detail' user_id=user_id pre_user_id=user_id %}'">瀏覽所有評價</button>
         <form method="post">
             {% csrf_token %}
             <button type="submit" name="button" value="personal_order">瀏覽訂單紀錄</button>

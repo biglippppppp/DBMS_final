@@ -30,7 +30,9 @@
     </div>
 	
 	{% for page in page_range %}
+    {% if page == current_page or page == pre_page or page == next_page %}
         <a href="?page={{ page }}">{{ page }}</a>
+    {% endif %}
     {% endfor %}
 	
     {% for order in orders %}

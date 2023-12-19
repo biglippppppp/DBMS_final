@@ -25,11 +25,20 @@ def want_order(request, user_id):
         # Get the orders from the API response
         orders = api_data.get('orders', [])
         nested_page_range = api_data.get('page_range')
-
+        int_page = int(page)
         # Flatten the nested lists
         page_range = list(chain.from_iterable(nested_page_range))
 
-        return render(request, 'order/want_order.html', {'orders': orders, 'user_id': user_id, 'page_range': page_range})
+        if int_page + 1 <= int(page_range[-1]):
+            print('yse')
+            next_page = int_page + 1
+        else:
+            next_page = int_page
+        if int_page - 1 >= int(page_range[0]):
+            pre_page = int_page - 1
+        else:
+            pre_page = int_page
+        return render(request, 'order/want_order.html', {'orders': orders, 'user_id': user_id, 'page_range': page_range, "current_page": page, "next_page": next_page, "pre_page": pre_page})
     return HttpResponseNotAllowed(['GET'])
 
 def sale_order(request, user_id):
@@ -45,9 +54,21 @@ def sale_order(request, user_id):
         nested_page_range = api_data.get('page_range')
 
         # Flatten the nested lists
+        int_page = int(page)
+        # Flatten the nested lists
         page_range = list(chain.from_iterable(nested_page_range))
 
-        return render(request, 'order/sale_order.html', {'orders': orders, 'user_id': user_id, 'page_range': page_range})
+        if int_page + 1 <= int(page_range[-1]):
+            print('yse')
+            next_page = int_page + 1
+        else:
+            next_page = int_page
+        if int_page - 1 >= int(page_range[0]):
+            pre_page = int_page - 1
+        else:
+            pre_page = int_page
+
+        return render(request, 'order/sale_order.html', {'orders': orders, 'user_id': user_id, 'page_range': page_range,"current_page": page, "next_page": next_page, "pre_page": pre_page})
     return HttpResponseNotAllowed(['GET'])
 def want_order_detail(request, user_id, order_id):
     api_url = f'http://localhost:8000/order/api/want_order_detail/{user_id}/{order_id}'
